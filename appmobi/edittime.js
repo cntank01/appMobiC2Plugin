@@ -5,7 +5,7 @@
 		"id":			"appMobi",			// this is used to identify this plugin and is saved to the project; never change it
 		"version":		"1.0",					// (float in x.y format) Plugin version - C2 shows compatibility warnings based on this
 		"description":	"Integrate your game with appMobi.",
-		"author":		"ken@appMobi",
+		"author":		"ken@appMobi.com",
 		"help url":		"http://www.scirra.com/manual/138/appmobi",
 		"category":		"Web",				// Prefer to re-use existing categories, but you can set anything here
 		"type":			"object",				// either "world" (appears in layout and is drawn), else "object"
@@ -82,14 +82,14 @@ AddCondition(9, cf_trigger, "On remote data", "Triggers", "On remote data", "Tri
 AddCondition(10, cf_trigger, "On 'back' button pressed", "Triggers", "On 'back' button pressed", "Triggered when the 'back' button (if any) is pressed after adding a virtual page.", "OnBack");
 
 /*********************************************************	
-	NOTIFICATIONS
+	NOTIFICATIONS 
 *********************************************************/
-AddCondition(11, cf_trigger, "On push enabled", "Triggers", "On Push Enabled", "Triggered when a player is ready to receive push messages.", "OnNotificationPushEnabled");
-AddCondition(12, cf_trigger, "Push Message Received", "Triggers", "Push Message Received", "This event is fired once the application has received a push notification", "OnNotificationPushReceive");
-AddCondition(13, cf_trigger, "Friend User Id Received", "Triggers", "Friend User Id Received", "This event is fired when the user id has been returned.", "OnNotificationPushUserFound");
-AddCondition(14, cf_trigger, "On Push Sent Success", "Triggers", "On Push Sent Success", "Triggered on successful message send.", "OnNotificationSendSuccess");
-AddCondition(15, cf_trigger, "On Push Sent Fail", "Triggers", "On Push Sent Fail", "Triggered on message failure.", "OnNotificationSendFail");
-AddCondition(16, cf_trigger, "Friend User Id Not Found", "Triggers", "Friend User Id Not Found", "This event is fired when the user id could not be located using supplied email.", "OnNotificationPushUserNotFound");
+AddCondition(11, cf_trigger, "On push enabled", "Triggers", "On push enabled", "Triggered when a player is ready to receive push messages.", "OnNotificationPushEnabled");
+AddCondition(12, cf_trigger, "Push message received", "Triggers", "Push message received", "This event is fired once the application has received a push notification", "OnNotificationPushReceive");
+AddCondition(13, cf_trigger, "Friend user id received", "Triggers", "Friend user id received", "This event is fired when the user id has been returned.", "OnNotificationPushUserFound");
+AddCondition(14, cf_trigger, "On push sent success", "Triggers", "On push sent success", "Triggered on successful message send.", "OnNotificationSendSuccess");
+AddCondition(15, cf_trigger, "On push sent fail", "Triggers", "On push sent fail", "Triggered on message failure.", "OnNotificationSendFail");
+AddCondition(16, cf_trigger, "Friend user id not found", "Triggers", "Friend user id not found", "This event is fired when the user id could not be located using supplied email.", "OnNotificationPushUserNotFound");
 
 
 ////////////////////////////////////////
@@ -126,7 +126,7 @@ AddAction(4, 0, "Launch external site", "Device", "Launch external site {0}", "T
 
 // Not useful from within C2?
 AddStringParam('Command', 'Command to execute');
-AddAction(5, af_deprecated, "Execute In Main View", "Device", "Execute In Main View", "Call this command from within a new web view created by the showRemoteSite or showRemoteSiteExt command to execute JavaScript commands within the main web view.", "deviceMainViewExecute");
+AddAction(5, af_deprecated, "Execute in main view", "Device", "Execute in main view", "Call this command from within a new web view created by the showRemoteSite or showRemoteSiteExt command to execute JavaScript commands within the main web view.", "deviceMainViewExecute");
 
 AddAction(6, 0, "Scan barcode", "Device", "Scan barcode", "Open a full-scren QR code reader.", "deviceScanBarcode");
 			
@@ -193,37 +193,37 @@ AddAction(19, 0, "Remove virtual page", "Virtual pages", "Remove virtual page", 
 *********************************************************/
 AddAudioFileParam('Audio file', 'The path to your audio file');
 AddNumberParam('Polyphonic count', 'The polyphonic count of a sound - that is, how many times that sound can be played concurrently.', 5);
-AddAction(20, 0, "PreLoad sound", "Audio", "PreLoad Sound", "Use this method to preload a sound file to prevent lag the first time it is played.", "LoadSound");
+AddAction(20, 0, "PreLoad sound", "Audio", "PreLoad sound", "Use this method to preload a sound file to prevent lag the first time it is played.", "LoadSound");
 
 AddAudioFileParam('Audio file', 'The path to your audio file');
-AddAction(21, 0, "Play sound", "Audio", "Play Sound", "Play sound effects in your game", "PlaySound");
+AddAction(21, 0, "Play sound", "Audio", "Play sound", "Play sound effects in your game", "PlaySound");
 
 AddAudioFileParam('Audio file', 'The path to your audio file');
 AddComboParamOption('Yes');
 AddComboParamOption('No');
 AddComboParam('Looping', 'The polyphonic count of a sound - that is, how many times that sound can be played concurrently.', 0);
-AddAction(22, 0, "Start audio", "Audio", "Start Audio", "This method will load and start playing a specified audio file. Useful for background music.", "StartAudio");
+AddAction(22, 0, "Start audio", "Audio", "Start audio", "This method will load and start playing a specified audio file. Useful for background music.", "StartAudio");
 
-AddAction(23, 0, "Stop audio", "Audio", "Stop Audio", "This method will stop the audio started by Start Audio", "StopAudio");
-AddAction(24, 0, "Toggle audio", "Audio", "Toggle Audio", "This method will pause or play the audio started by Start Audio", "ToggleAudio");
+AddAction(23, 0, "Stop audio", "Audio", "Stop audio", "This method will stop the audio started by Start Audio", "StopAudio");
+AddAction(24, 0, "Toggle audio", "Audio", "Toggle audio", "This method will pause or play the audio started by Start Audio", "ToggleAudio");
 
-AddAction(25, 0, "Unload all aounds", "Audio", "Unload All Sounds", "Use this method to unload all sound files that have been loaded via PreLoad & Play Sound.", "UnloadAllSounds");
+AddAction(25, 0, "Unload all sounds", "Audio", "Unload all sounds", "Use this method to unload all sound files that have been loaded via PreLoad & Play Sound.", "UnloadAllSounds");
 
 AddAudioFileParam('Audio file', 'The path to your audio file');
-AddAction(26, 0, "Unload sound file", "Audio", "Unload Sound File", "Use this method to unload a sound file.", "UnloadSound");
+AddAction(26, 0, "Unload sound file", "Audio", "Unload sound file", "Use this method to unload a sound file.", "UnloadSound");
 
 
 AddStringParam('Audio file', 'The name of your audio file');
-AddAction(27, 0, "Play sound (by name)", "Audio", "Play Sound (by name)", "Play sound effects using a string for the name.", "PlaySound");
+AddAction(27, 0, "Play sound (by name)", "Audio", "Play sound (by name)", "Play sound effects using a string for the name.", "PlaySound");
 
 AddStringParam('Audio file', 'The name of your audio file');
 AddComboParamOption('Yes');
 AddComboParamOption('No');
 AddComboParam('Looping', 'The polyphonic count of a sound - that is, how many times that sound can be played concurrently.', 0);
-AddAction(28, 0, "Start audio (by name)", "Audio", "Start Audio (by name)", "Play an audio file using a string for the name. Useful for background music.", "StartAudio");
+AddAction(28, 0, "Start audio (by name)", "Audio", "Start audio (by name)", "Play an audio file using a string for the name. Useful for background music.", "StartAudio");
 
-AddAudioFileParam('Audio File', 'The name of your audio file');
-AddAction(29, 0, "Unload sound file (by name)", "Audio", "Unload Sound File (by name)", "Use this method to unload a sound file.", "UnloadSound");
+AddAudioFileParam('Audio file', 'The name of your audio file');
+AddAction(29, 0, "Unload sound file (by name)", "Audio", "Unload sound file (by name)", "Use this method to unload a sound file.", "UnloadSound");
 
 /*********************************************************	
 	NOTIFICATIONS & SMS
@@ -232,10 +232,10 @@ AddStringParam('Body text', 'Content of the message body.', '');
 AddStringParam('To number', 'String containing number to send message.', '');
 AddAction(37, 0, "Send SMS", "Device", "Send SMS", "This method will send an SMS message.", "deviceSendSMS");
 
-AddStringParam('User Id', 'A unique string (per appMobi application) for this user to be addressable in the push system. The user id may not contain spaces or periods.', '');
-AddStringParam('Passowrd', 'The user\'s chosen password for the push system. The password may not contain spaces or periods.', '');
+AddStringParam('User id', 'A unique string (per appMobi application) for this user to be addressable in the push system. The user id may not contain spaces or periods.', '');
+AddStringParam('Password', 'The user\'s chosen password for the push system. The password may not contain spaces or periods.', '');
 AddStringParam('Email', 'The email address that the AppMobi.notification.sendPushUserPass command will use to notifiy users about their userID and password information.', '');
-AddAction(38, 0, "Add push user", "Notifications", "Add Push User", "This method will send an SMS message.", "notificationAddPushUser");
+AddAction(38, 0, "Add push user", "Notifications", "Add push user", "This method will send an SMS message.", "notificationAddPushUser");
 
 AddNumberParam('Count', 'The number of times the device should beep in succession.', 1);
 AddAction(39, 0, "Beep", "Notifications", "Beep", "This method will cause the device to beep.", "notificationBeep");
@@ -248,9 +248,9 @@ AddStringParam('Button text', 'The text to put on the button that dismisses the 
 AddAction(31, 0, "Alert", "Notifications", "Alert", "This method will display a modal alert box.", "notificationAlert");
 
 AddNumberParam('Message index', 'The current index of the Push Message Queue', 0);
-AddAction(32, 0, "Show rich message", "Notifications", "Show Rich Message", "This method will cause the device to beep.", "notificationShowRich");
+AddAction(32, 0, "Show rich message", "Notifications", "Show rich message", "This method will cause the device to beep.", "notificationShowRich");
 
-AddAction(33, 0, "Delete push user", "Notifications", "Delete Push User", "Use this method to sign out of push notifications and no longer receive push messages for the application.", "notificationDeleteUser");
+AddAction(33, 0, "Delete push user", "Notifications", "Delete push user", "Use this method to sign out of push notifications and no longer receive push messages for the application.", "notificationDeleteUser");
 
 AddStringParam('S1', 'String 1. Leave blank to not change, enter "*" to clear previously set value.', '');
 AddStringParam('S2', 'String 2. Leave blank to not change, enter "*" to clear previously set value.', '');
@@ -266,12 +266,12 @@ AddAnyTypeParam('N4', 'Number 4. Leave blank to not change, enter "*" to clear p
 AddAction(34, 0, "Set user attribute", "Notifications", "Set User Attributes", "Use this method to associate attributes to a user.", "notificationSetUserAttributes");
 
 AddStringParam('Email', 'An email address to look for in the messaging database of the application.', '');
-AddAction(35, 0, "Find user", "Notifications", "Find User", "Use this method send a friend a push message", "notificationFindUser");
+AddAction(35, 0, "Find user", "Notifications", "Find user", "Use this method send a friend a push message", "notificationFindUser");
 
 AddStringParam('Id', 'The unique user identification of the user to send the message to. You can get this by using "Find User"', '');
 AddStringParam('Message', 'The text of the message to send.', '');
 AddStringParam('Data', 'A string of text that is sent along to be interpreted by the receiving device, but not automatically displayed.', '');
-AddAction(36, 0, "Send push notification", "Notifications", "Send Push Notification", "Use this method to send a push notification to another user of an application.", "notificationSendPush");
+AddAction(36, 0, "Send push notification", "Notifications", "Send push notification", "Use this method to send a push notification to another user of an application.", "notificationSendPush");
 
 //AddAction(18, 0, "Enable WITHOUT Rotation Adjustment", "Accelerometer", "This will allow you to access the X, Y, Z values without adjusting for rotation.", "accelerometerEnableAndWatch");
 
@@ -294,20 +294,20 @@ AddAction(36, 0, "Send push notification", "Notifications", "Send Push Notificat
 /*********************************************************	
 	DEVICE
 *********************************************************/	
-AddExpression(0, ef_return_string, "appMobi Version", "Device", "AppMobiVersion", "The version of the appMobi container software that the application is using.");
+AddExpression(0, ef_return_string, "appMobi version", "Device", "AppMobiVersion", "The version of the appMobi container software that the application is using.");
 AddExpression(1, ef_return_string, "Connection", "Device", "DeviceConnection", 'The best type of internet connection available ("wifi", "cell" or "none").');
-AddExpression(2, ef_return_number, "Initial Orientation", "Device", "InitialOrientation", "The initial orientation of the device (0, -90, 90 or 180).");
-AddExpression(3, ef_deprecated | ef_return_string, "Last Station", "Device", "DeviceLastStation", "The NetStationID or ShoutcastURL of the station that is currently playing.");
+AddExpression(2, ef_return_number, "Initial orientation", "Device", "InitialOrientation", "The initial orientation of the device (0, -90, 90 or 180).");
+AddExpression(3, ef_deprecated | ef_return_string, "Last station", "Device", "DeviceLastStation", "The NetStationID or ShoutcastURL of the station that is currently playing.");
 AddExpression(4, ef_return_string, "Model", "Device", "DeviceModel", 'The model of the device that the application is running on, e.g. "iPhone 4" or "Motorola Droid".');
 AddExpression(5, ef_return_number, "Orientation", "Device", "Orientation", "The current orientation of the device (0, -90, 90 or 180).");
-AddExpression(6, ef_return_string, "OS Version", "Device", "DeviceOSVersion", "The device’s current operating system version information.");
+AddExpression(6, ef_return_string, "OS version", "Device", "DeviceOSVersion", "The device’s current operating system version information.");
 AddExpression(7, ef_deprecated | ef_return_string, "Phone Gap Version", "Device", "DevicePhonegapVersion", "This property returns the version of phonegap running below the AppMobi layer.");
 AddExpression(8, ef_return_string, "Platform", "Device", "DevicePlatform", 'A string identifying the platform that appMobi is running on, e.g. "iOS" or "Android".');
-AddExpression(9, ef_return_string, "Query String", "Device", "DeviceQueryString", "Returns any query string parameters passed along with a protocol handler call to start an application.");
+AddExpression(9, ef_return_string, "Query string", "Device", "DeviceQueryString", "Returns any query string parameters passed along with a protocol handler call to start an application.");
 AddExpression(10, ef_return_string, "UUID", "Device", "DeviceUUID", "The device’s unique identification id.");
-AddExpression(11, ef_return_string, "Remote Data", "Device", "DeviceRemoteData", "The response data from 'Get Remote Data'.");
-AddExpression(12, ef_return_string, "Scanned Barcode Data", "Device", "DeviceBarcodeData", "The response data from 'Scan Barcode'.");
-AddExpression(13, ef_return_string, "Remote Site Window Status", "Device", "DeviceRemoteStatus", 'One of "open", "closed" or "idle".');
+AddExpression(11, ef_return_string, "Remote data", "Device", "DeviceRemoteData", "The response data from 'Get Remote Data'.");
+AddExpression(12, ef_return_string, "Scanned barcode data", "Device", "DeviceBarcodeData", "The response data from 'Scan Barcode'.");
+AddExpression(13, ef_return_string, "Remote site window status", "Device", "DeviceRemoteStatus", 'One of "open", "closed" or "idle".');
 
 
 /*********************************************************	
@@ -323,11 +323,11 @@ AddExpression(15, ef_return_string, "MediaCache", "Cache", "LocalMediaCacheURL",
 /*********************************************************	
 	NOTIFICATIONS
 *********************************************************/
-AddExpression(16, ef_return_number, "New Message Queue Count", "Notifications", "PushNotificationQueueCount", "Returns the count of new push messages waiting to be read.");
-AddExpression(17, ef_return_string | ef_variadic_parameters, "Push Message Text", "Notifications", "PushNotificationMessage", "Returns the text of a 'simple message'.");
-AddExpression(18, ef_return_string | ef_variadic_parameters, "Push Message Data", "Notifications", "PushNotificationData", "Returns the data bundle sent with a push message.");
-AddExpression(19, ef_return_string | ef_variadic_parameters, "Push Message Type", "Notifications", "PushNotificationType", "Returns the type of push message. Values will be either 'plaintext' or 'rich'");
-AddExpression(20, ef_return_string, "Push Friend User Id", "Notifications", "PushFriendUserId", "Returns the the friends Push user id");
+AddExpression(16, ef_return_number, "New message queue count", "Notifications", "PushNotificationQueueCount", "Returns the count of new push messages waiting to be read.");
+AddExpression(17, ef_return_string | ef_variadic_parameters, "Push message text", "Notifications", "PushNotificationMessage", "Returns the text of a 'simple message'.");
+AddExpression(18, ef_return_string | ef_variadic_parameters, "Push message data", "Notifications", "PushNotificationData", "Returns the data bundle sent with a push message.");
+AddExpression(19, ef_return_string | ef_variadic_parameters, "Push message type", "Notifications", "PushNotificationType", "Returns the type of push message. Values will be either 'plaintext' or 'rich'");
+AddExpression(20, ef_return_string, "Push friend user id", "Notifications", "PushFriendUserId", "Returns the the friends Push user id");
 
 
 ////////////////////////////////////////

@@ -41,6 +41,14 @@ document.addEventListener("appMobi.notification.push.send", function(evt){
 	}
 }, false);
 
+
+document.addEventListener("appMobi.device.remote.data", function(evt){
+	try {
+		if(evt.success){
+			AppMobi.canvas.execute("window['cr']['plugins_'].appMobi.prototype.Instance.prototype.dcGetRemoteData('"+encodeURIComponent(evt.response)+"');");
+		}
+	} catch(e){}
+},false);
 /****************************************************************
 	ACTIONS
 ****************************************************************/
@@ -92,4 +100,13 @@ function dcNotificationSetUserAttributes(s){
 		AppMobi['notification']['setPushUserAttributes'](attributes);
 	
 	}catch(e){console.log(e);}
+}
+
+function dcGetRemoteData(method,url,body,id){
+	AppMobi.device.getRemoteData(url, method, body, 'processRemoteData', 'processRemoteData');
+}
+
+function processRemoteData(data){
+	d=data.replace("'", "&#39;");
+	AppMobi.canvas.execute("window['cr']['plugins_'].appMobi.prototype.Instance.prototype.dcGetRemoteData('"+d+"');");
 }

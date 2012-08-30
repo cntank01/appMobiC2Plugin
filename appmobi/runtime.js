@@ -266,7 +266,12 @@ cr.plugins_.appMobi = function(runtime)
 		}catch(e){}
 	};
 	
-	
+	instanceProto.dcGetRemoteData=function(data){
+		try{
+			evtRemoteDataResponse=decodeURIComponent(data);
+			appMobiRuntime.trigger(cr.plugins_.appMobi.prototype.cnds.OnRemoteData, appMobiInst); //appMobiInst
+		}catch(e){}
+	};
 	
 	//////////////////////////////////////
 	// Conditions
@@ -337,7 +342,6 @@ cr.plugins_.appMobi = function(runtime)
 	};
 	
 	cnds.OnNotificationPushReceive=function(){
-		console.log('message received');
 		return true;
 	};
 	
@@ -376,7 +380,7 @@ cr.plugins_.appMobi = function(runtime)
 		return true;
 	};
 	
-	//////////////////////////////////////
+	////////////////////////////////////// 
 	// Actions
 	pluginProto.acts = {};
 	var acts = pluginProto.acts;
@@ -392,19 +396,21 @@ cr.plugins_.appMobi = function(runtime)
 	};
 	acts.deviceGetRemoteData = function (method, url, body, id)
 	{
-		if (isDC)
-			return;
-			//awex("AppMobi['player']['startAudio']");
-			
-		try {
-			evtRemoteDataResponse=''; 
-			var parameters = new appMobiObj['device']['RemoteDataParameters']();
-			parameters.url = url;
-			parameters.id = id;
-			parameters.method = method;
-			parameters.body = body;
-			appMobiObj['device']['getRemoteDataExt'](parameters);
-		} catch(e) {}
+		if (isDC){
+			try{
+				awex("dcGetRemoteData('"+ method +"','" + url +"','"+ body +"','"+ id +"');");
+			}catch(e){console.log(e);}
+		}else{	
+			try {
+				evtRemoteDataResponse=''; 
+				var parameters = new appMobiObj['Device']['RemoteDataParameters']();
+				parameters.url = url;
+				parameters.id = id;
+				parameters.method = method;
+				parameters.body = body;
+				appMobiObj['device']['getRemoteDataExt'](parameters);
+			} catch(e) {console.log('grd',e);}
+		}
 	}
 	
 	acts.deviceHideSplashScreen = function ()
@@ -840,9 +846,8 @@ cr.plugins_.appMobi = function(runtime)
 			return;
 			
 		try{
-			console.log(sndFile);
 			if(typeof sndFile=='object'){ sndFile=sndFile[0];}
-			console.log(sndFile);
+
 			var boolLoop=true;
 			if(looping==0){boolLoop=true;}
 			
