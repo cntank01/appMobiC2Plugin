@@ -127,5 +127,5 @@ Notifications
 
 Important Notes About Exporting Using DirectCanvas
 =================================================
-1 If you are exporting your game using DirectCanvas please include the directcanvasC2.js file in the header of index.html If you do not certain features will not work properly.
-2 DO NOT minify your game when using DirectCanvas.
+- If you are exporting your game using DirectCanvas please include the directcanvasC2.js file in the header of index.html If you do not certain features will not work properly.
+- DO NOT minify your game when using DirectCanvas as some calls will break. There is some communication between the dc and dom layer that needs to happen and minifing breaks that.
