@@ -91,6 +91,8 @@ AddCondition(14, cf_trigger, "On push sent success", "Triggers", "On push sent s
 AddCondition(15, cf_trigger, "On push sent fail", "Triggers", "On push sent fail", "Triggered on message failure.", "OnNotificationSendFail");
 AddCondition(16, cf_trigger, "Friend user id not found", "Triggers", "Friend user id not found", "This event is fired when the user id could not be located using supplied email.", "OnNotificationPushUserNotFound");
 
+AddCondition(17, cf_trigger, "On audio end", "Triggers", "On audio end", "This event will fire once an audio file is complete.", "OnAudioStop");
+
 
 ////////////////////////////////////////
 // Actions

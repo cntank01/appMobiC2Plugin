@@ -12,6 +12,7 @@ cr.plugins_.appMobi = function(runtime)
 };
 
 
+
 (function ()
 {
 	var pluginProto = cr.plugins_.appMobi.prototype;
@@ -177,6 +178,9 @@ cr.plugins_.appMobi = function(runtime)
 		appMobiRuntime.trigger(cr.plugins_.appMobi.prototype.cnds.OnBack, appMobiInst);
 	};
 		
+	amev.audioStop=function(){	
+		appMobiRuntime.trigger(cr.plugins_.appMobi.prototype.cnds.OnAudioStop, appMobiInst);
+	};
 	
 	var instanceProto = pluginProto.Instance.prototype;
 
@@ -208,8 +212,7 @@ cr.plugins_.appMobi = function(runtime)
 			document.addEventListener("appMobi.notification.push.user.find", amev.notificationPushUserFound, false);
 			document.addEventListener("appMobi.notification.push.send", amev.notificationPushSent, false);
 			
-		}else if(isDC){
-	
+			document.addEventListener("appMobi.player.audio.stop", amev.audioStop, false);
 		}
 	};
 	
@@ -217,13 +220,14 @@ cr.plugins_.appMobi = function(runtime)
 	{
 	};
 	
-	instanceProto.dcNotificationEnabled=function(d){
+	window['dcNotificationEnabled']=function(){
 		try{
 			appMobiRuntime.trigger(cr.plugins_.appMobi.prototype.cnds.OnNotificationPushEnabled, appMobiInst);
 		}catch(e){}
-	};
+	}
 	
-	instanceProto.dcNotificationReceived=function(d){
+	
+	window['dcNotificationReceived']=function(d){
 		try {
 			queue=JSON.parse(d);
 			notificationPushQueue = queue;
@@ -233,20 +237,20 @@ cr.plugins_.appMobi = function(runtime)
 		} catch(e){console.log(e);}
 	};
 
-	instanceProto.dcNotificationRichClosed=function(id){
+	window['dcNotificationRichClosed']=function(id){
 		try{
 			awex("appMobiObj['notification']['deletePushNotifications']('"+id+"');");
 		}catch(e){}
 	};
 	
-	instanceProto.dcNotificationPushUserFound=function(id){
+	window['dcNotificationPushUserFound']=function(id){
 		try{
 			pushFriendUserId=id;
 			appMobiRuntime.trigger(cr.plugins_.appMobi.prototype.cnds.OnNotificationPushUserFound, appMobiInst);
 		}catch(e){}
 	};
 	
-	instanceProto.dcNotificationPushUserNotFound=function(){
+	window['dcNotificationPushUserNotFound']=function(){
 		try{
 			pushFriendUserId='';
 			appMobiRuntime.trigger(cr.plugins_.appMobi.prototype.cnds.OnNotificationPushUserNotFound, appMobiInst);
@@ -254,19 +258,21 @@ cr.plugins_.appMobi = function(runtime)
 		}catch(e){}
 	};
 	
-	instanceProto.dcNotificationPushSentSuccess=function(){
+	window['dcNotificationPushSentSuccess']=function(){
 		try{		
 			appMobiRuntime.trigger(cr.plugins_.appMobi.prototype.cnds.OnNotificationSendSuccess, appMobiInst);
 		}catch(e){}
 	};
 	
-	instanceProto.dcNotificationPushSentFail=function(){
+	
+	
+	window['dcNotificationPushSentFail']=function(){
 		try{		
 			appMobiRuntime.trigger(cr.plugins_.appMobi.prototype.cnds.OnNotificationSendFail, appMobiInst);
 		}catch(e){}
 	};
 	
-	instanceProto.dcGetRemoteData=function(data){
+	window['dcGetRemoteData']=function(data){
 		try{
 			evtRemoteDataResponse=decodeURIComponent(data);
 			appMobiRuntime.trigger(cr.plugins_.appMobi.prototype.cnds.OnRemoteData, appMobiInst); //appMobiInst
@@ -357,6 +363,10 @@ cr.plugins_.appMobi = function(runtime)
 		return true;
 	};
 	
+	cnds.OnAudioStop=function(){
+		return true;
+	};
+	
 	cnds.OnNotificationSendSuccess=function(){
 		return true;
 	};
@@ -398,7 +408,7 @@ cr.plugins_.appMobi = function(runtime)
 	{
 		if (isDC){
 			try{
-				awex("dcGetRemoteData('"+ method +"','" + url +"','"+ body +"','"+ id +"');");
+				awex("GetRemoteData('"+ method +"','" + url +"','"+ body +"','"+ id +"');");
 			}catch(e){console.log(e);}
 		}else{	
 			try {
@@ -823,7 +833,7 @@ cr.plugins_.appMobi = function(runtime)
 		try{
 			if(typeof sndFile=='object'){ sndFile=sndFile[0];}
 			if (isDC){
-				try{
+				try{					
 					awex("AppMobi['player']['playSound']('./media/"+sndFile+".m4a');");
 				}catch(e){
 					awex("AppMobi['player']['playSound']('./media/"+sndFile+".ogg');");
@@ -833,9 +843,7 @@ cr.plugins_.appMobi = function(runtime)
 					appMobiObj['player']['playSound']('./media/'+sndFile+'.m4a');
 				}else{
 					appMobiObj['player']['playSound']('./media/'+sndFile+'.ogg');
-				}
-				
-				
+				}				
 			}
 		}catch(e){console.log('playsound error',e);}
 	};

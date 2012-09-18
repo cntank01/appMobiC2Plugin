@@ -3,7 +3,7 @@
 ****************************************************************/
 document.addEventListener("appMobi.notification.push.enable", function(evt){
 	if(evt.success){			
-		AppMobi.canvas.execute("window['cr']['plugins_'].appMobi.prototype.Instance.prototype.dcNotificationEnabled();");				
+		AppMobi.canvas.execute("window['dcNotificationEnabled']();");				
 	}
 }, false);
 
@@ -13,7 +13,7 @@ document.addEventListener("appMobi.notification.push.receive", function(evt){
 		if(evt.success)
 		{
 			notificationPushQueue = AppMobi['notification']['getNotificationList'](); 
-			AppMobi.canvas.execute("window['cr']['plugins_'].appMobi.prototype.Instance.prototype.dcNotificationReceived('"+JSON.stringify(notificationPushQueue)+"');");				
+			AppMobi.canvas.execute("window['dcNotificationReceived']('"+JSON.stringify(notificationPushQueue)+"');");				
 		}
 	} catch(e){}
 		
@@ -21,23 +21,23 @@ document.addEventListener("appMobi.notification.push.receive", function(evt){
 
 document.addEventListener("appMobi.notification.push.rich.close", function(evt){
 	if(evt.id!=''){			
-		AppMobi.canvas.execute("window['cr']['plugins_'].appMobi.prototype.Instance.prototype.dcNotificationRichClosed('"+evt.id+"');");				
+		AppMobi.canvas.execute("window['dcNotificationRichClosed']('"+evt.id+"');");				
 	}
 }, false);
 
 document.addEventListener("appMobi.notification.push.user.find", function(evt){
 	if(evt.success){			
-		AppMobi.canvas.execute("window['cr']['plugins_'].appMobi.prototype.Instance.prototype.dcNotificationPushUserFound('"+evt.userid+"');");				
+		AppMobi.canvas.execute("window['dcNotificationPushUserFound']('"+evt.userid+"');");				
 	}else{
-		AppMobi.canvas.execute("window['cr']['plugins_'].appMobi.prototype.Instance.prototype.dcNotificationPushUserNotFound('"+evt.userid+"');");				
+		AppMobi.canvas.execute("window['dcNotificationPushUserNotFound']('"+evt.userid+"');");				
 	}
 }, false);
 
 document.addEventListener("appMobi.notification.push.send", function(evt){
 	if(evt.success){			
-		AppMobi.canvas.execute("window['cr']['plugins_'].appMobi.prototype.Instance.prototype.dcNotificationPushSentSuccess();");				
+		AppMobi.canvas.execute("window['dcNotificationPushSentSuccess']();");				
 	}else{
-		AppMobi.canvas.execute("window['cr']['plugins_'].appMobi.prototype.Instance.prototype.dcNotificationPushSentFail();");				
+		AppMobi.canvas.execute("window['dcNotificationPushSentFail']();");				
 	}
 }, false);
 
@@ -45,7 +45,7 @@ document.addEventListener("appMobi.notification.push.send", function(evt){
 document.addEventListener("appMobi.device.remote.data", function(evt){
 	try {
 		if(evt.success){
-			AppMobi.canvas.execute("window['cr']['plugins_'].appMobi.prototype.Instance.prototype.dcGetRemoteData('"+encodeURIComponent(evt.response)+"');");
+			AppMobi.canvas.execute("window['dcGetRemoteData']('"+encodeURIComponent(evt.response)+"');");
 		}
 	} catch(e){}
 },false);
@@ -102,11 +102,11 @@ function dcNotificationSetUserAttributes(s){
 	}catch(e){console.log(e);}
 }
 
-function dcGetRemoteData(method,url,body,id){
+function GetRemoteData(method,url,body,id){
 	AppMobi.device.getRemoteData(url, method, body, 'processRemoteData', 'processRemoteData');
 }
 
 function processRemoteData(data){
 	d=data.replace("'", "&#39;");
-	AppMobi.canvas.execute("window['cr']['plugins_'].appMobi.prototype.Instance.prototype.dcGetRemoteData('"+d+"');");
+	AppMobi.canvas.execute("window['dcGetRemoteData']('"+d+"');");
 }
