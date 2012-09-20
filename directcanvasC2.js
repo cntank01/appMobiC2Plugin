@@ -110,3 +110,12 @@ function processRemoteData(data){
 	d=data.replace("'", "&#39;");
 	AppMobi.canvas.execute("window['dcGetRemoteData']('"+d+"');");
 }
+function wvGeoProcessLocation(p){
+	AppMobi.canvas.execute("window['amevGeoProcessLocation']('"+p.coords.latitude+"','"+p.coords.longitude+"');");
+}
+function wvGeoProcessLocationFail(p){}
+
+function wvAccelSuccess(p){
+	AppMobi.canvas.execute("window['amevAccelProcess']('"+p.x+"','"+p.y+"','"+p.z+"');");
+}
+function wvAccelFail(p){}

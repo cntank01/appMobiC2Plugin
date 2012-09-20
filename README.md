@@ -6,37 +6,15 @@ This plugin will allow you to use appMobi's javascript API and cloud services in
 Available Actions
 =================
 
-Device
-------
-- Hide Splash Screen
-- Show remote site
-- Close remote site
-- Get remote data
-- Install update
-- Launch external site
-- Execute In Main View
-- Set auto-rotate
-- Set orientation
-- Update connection
-- Send SMS
+Accelerometer
+-------------
+- Watch acceleration
+- Stop watching acceleration
+- Get current acceleration
 
 Analytics
 ---------
 - Log event
-
-Cache
------
-- Set cookie
-- Remove cookie
-- Clear all cookies
-- Add to media cache
-- Remove from media cache
-- Clear media cache
-
-Virtual Pages
--------------
-- Add virtual page
-- Remove virtual page
 
 Audio
 -----
@@ -51,6 +29,36 @@ Audio
 - Unload Sound File (by name)
 - Unload all sounds
 
+Cache
+-----
+- Set cookie
+- Remove cookie
+- Clear all cookies
+- Add to media cache
+- Remove from media cache
+- Clear media cache
+
+Device
+------
+- Hide Splash Screen
+- Show remote site
+- Close remote site
+- Get remote data
+- Install update
+- Manage power
+- Launch external site
+- Execute In Main View
+- Set auto-rotate
+- Set orientation
+- Update connection
+- Send SMS
+
+Geolocation
+-----------
+- Watch position
+- Stop watching position
+- Get current position
+
 Notifications / Push Messaging
 ------------------------------
 - Beep
@@ -62,6 +70,12 @@ Notifications / Push Messaging
 - Find user
 - Show rich message
 - Send push notification
+
+Virtual Pages
+-------------
+- Add virtual page
+- Remove virtual page
+
 
 
 Available Events
@@ -79,6 +93,8 @@ Device
 
 Triggers
 --------
+- Accelerometer updated
+- Geolocation updates
 - On barcode scanned
 - On remote site closed
 - On remote data
@@ -93,6 +109,17 @@ Triggers
 
 Available Expressions
 =====================
+
+Accelerometer
+-------------
+- AccelerationX
+- AccelerationY
+- AccelerationZ
+
+Cache
+-----
+- Cookie
+- MediaCache
 
 Device
 ------
@@ -111,10 +138,10 @@ Device
 - Scanned Barcode Data
 - Remote Site Window Status
 
-Cache
------
-- Cookie
-- MediaCache
+Geolocation
+-----------
+- GeolocationLat
+- GeolocationLong
 
 Notifications
 -------------
@@ -125,7 +152,7 @@ Notifications
 - Push Friend User Id
 
 
+
 Important Notes About Exporting Using DirectCanvas
 =================================================
 - If you are exporting your game using DirectCanvas please include the directcanvasC2.js file in the header of index.html If you do not certain features will not work properly.
-- DO NOT minify your game when using DirectCanvas as some calls will break. There is some communication between the dc and dom layer that needs to happen and minifing breaks that.

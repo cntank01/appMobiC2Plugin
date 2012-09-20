@@ -92,6 +92,8 @@ AddCondition(15, cf_trigger, "On push sent fail", "Triggers", "On push sent fail
 AddCondition(16, cf_trigger, "Friend user id not found", "Triggers", "Friend user id not found", "This event is fired when the user id could not be located using supplied email.", "OnNotificationPushUserNotFound");
 
 AddCondition(17, cf_trigger, "On audio end", "Triggers", "On audio end", "This event will fire once an audio file is complete.", "OnAudioStop");
+AddCondition(18, cf_trigger, "Geolocation updated", "Triggers", "Geolocation updated", "This event will fire once every interval set via the 'timeout' parameter.", "OnGeoLocationReceived");
+AddCondition(19, cf_trigger, "Accelerometer updated", "Triggers", "Accelerometer updated", "This event will fire once every interval set via the 'frequency' parameter.", "OnAccellReceived");
 
 
 ////////////////////////////////////////
@@ -277,6 +279,26 @@ AddAction(36, 0, "Send push notification", "Notifications", "Send push notificat
 
 //AddAction(18, 0, "Enable WITHOUT Rotation Adjustment", "Accelerometer", "This will allow you to access the X, Y, Z values without adjusting for rotation.", "accelerometerEnableAndWatch");
 
+AddComboParamOption('Yes');
+AddComboParamOption('No');
+AddComboParam('Stay on', 'sets whether normal power management for the device applies or not.sets whether normal power management for the device applies or not.', 0);
+AddComboParamOption('Yes');
+AddComboParamOption('No');
+AddComboParam('Only when plugged in', 'If "Stay on" is "Yes" and "Only when plugged in" is "Yes", then the device will not go to sleep ONLY IF the device is plugged in. ', 1);
+AddAction(40, 0, "Manage power", "Device", "Manage power", "This method controls how the device behaves in certain power states.", "deviceManagePower");
+
+AddNumberParam('Timeout', 'The number of milliseconds between checks of position rather than the default value of 10000 (or ten seconds).', 10000);
+AddComboParamOption('Yes');
+AddComboParamOption('No');
+AddComboParam('High accuracy', 'This will force the command to report back a more accurate latitude and longitude position at the expense of more battery usage.', 1);
+
+AddAction(41, 0, "Watch position", "Geolocation", "Watch position", "This method tracks the location as the device moves. The coordinate values are available in the appMobi expression variables.", "geoWatchPosition");
+AddAction(42, 0, "Stop watching position", "Geolocation", "Stop watching position", "This method stops the process started by Watch Position.", "geoStopWatchPosition");
+AddAction(43, 0, "Get current position", "Geolocation", "Get current position", "Use this to get the current location of the device.", "geoGetPosition");
+
+AddAction(44, 0, "Watch acceleration", "Accelerometer", "Watch acceleration", "his method will asynchronously acquire the device's acceleration repeatedly at a given interval. The values are available in the appMobi expression variables.", "accelWatch");
+AddAction(45, 0, "Stop watching acceleration", "Accelerometer", "Stop watching acceleration", "This method stops the process started by Watch Acceleration.", "accelStop");
+AddAction(46, 0, "Get current acceleration", "Accelerometer", "Get current acceleration", "Use this to get the current location of the device.", "accelGet");
 
 
 
@@ -329,7 +351,14 @@ AddExpression(16, ef_return_number, "New message queue count", "Notifications", 
 AddExpression(17, ef_return_string | ef_variadic_parameters, "Push message text", "Notifications", "PushNotificationMessage", "Returns the text of a 'simple message'.");
 AddExpression(18, ef_return_string | ef_variadic_parameters, "Push message data", "Notifications", "PushNotificationData", "Returns the data bundle sent with a push message.");
 AddExpression(19, ef_return_string | ef_variadic_parameters, "Push message type", "Notifications", "PushNotificationType", "Returns the type of push message. Values will be either 'plaintext' or 'rich'");
-AddExpression(20, ef_return_string, "Push friend user id", "Notifications", "PushFriendUserId", "Returns the the friends Push user id");
+AddExpression(20, ef_return_string, "Push friend user id", "Notifications", "PushFriendUserId", "Returns the friends Push user id");
+
+AddExpression(21, ef_return_number, "Latitude", "Geolocation", "GeolocationLat", "Contains  the current Latitude");
+AddExpression(22, ef_return_number, "Longitude", "Geolocation", "GeolocationLong", "Contains  the current Longitude");
+
+AddExpression(22, ef_return_number, "X", "Accelerometer", "AccelerationX", "Contains  the current Longitude");
+AddExpression(22, ef_return_number, "Y", "Accelerometer", "AccelerationY", "Contains  the current Longitude");
+AddExpression(22, ef_return_number, "Z", "Accelerometer", "AccelerationZ", "Contains  the current Longitude");
 
 
 ////////////////////////////////////////

@@ -45,7 +45,12 @@ cr.plugins_.appMobi = function(runtime)
 	var notificationPushQueue=[];
 	var notificationPushQueueCount=0;
 	var pushFriendUserId='';
+	var evtGeoLat=0;
+	var evtGeoLong=0;
 	
+	var evtAccelX=0;
+	var evtAccelY=0;
+	var evtAccelZ=0;
 	// for executing in webview in DC mode
 	var awex = null;
 	
@@ -182,6 +187,30 @@ cr.plugins_.appMobi = function(runtime)
 		appMobiRuntime.trigger(cr.plugins_.appMobi.prototype.cnds.OnAudioStop, appMobiInst);
 	};
 	
+	amev.geoProcessLocation=function(p){
+		appMobiRuntime.trigger(cr.plugins_.appMobi.prototype.cnds.OnGeoLocationReceived, appMobiInst);
+		evtGeoLat=p.coords.latitude;
+		evtGeoLong=p.coords.longitude;
+	};
+	amev.geoProcessLocationFail=function(p){
+		evtGeoLat=0;
+		evtGeoLong=0;
+	};
+	
+	amev.accelSuccess=function(p){
+		appMobiRuntime.trigger(cr.plugins_.appMobi.prototype.cnds.OnAccellReceived, appMobiInst);
+		evtAccelX=p.x;
+		evtAccelY=p.y;
+		evtAccelZ=p.z;
+
+	};
+	amev.accelFail=function(p){
+		evtAccelX=0;
+		evtAccelY=0;
+		evtAccelZ=0;
+	};
+	
+	
 	var instanceProto = pluginProto.Instance.prototype;
 
 	// called whenever an instance is created
@@ -279,6 +308,28 @@ cr.plugins_.appMobi = function(runtime)
 		}catch(e){}
 	};
 	
+	window['amevGeoProcessLocation']=function(lat,lng){
+		appMobiRuntime.trigger(cr.plugins_.appMobi.prototype.cnds.OnGeoLocationReceived, appMobiInst);
+		evtGeoLat=lat;
+		evtGeoLong=lng;
+	};
+	
+	window['amevGeoProcessLocationFail']=function(p){}
+	
+	window['geoWatchTimer']={};
+	
+	window['amevAccelProcess']=function(x,y, z){
+		appMobiRuntime.trigger(cr.plugins_.appMobi.prototype.cnds.OnAccellReceived, appMobiInst);
+		evtAccelX=x;
+		evtAccelY=y;
+		evtAccelZ=z;
+	};
+	
+	window['amevGeoProcessLocationFail']=function(p){}
+	
+	window['accelWatchTimer']={};
+	
+	
 	//////////////////////////////////////
 	// Conditions
 	pluginProto.cnds = {};
@@ -367,6 +418,14 @@ cr.plugins_.appMobi = function(runtime)
 		return true;
 	};
 	
+	cnds.OnGeoLocationReceived=function(){
+		return true;
+	};
+	
+	cnds.OnAccellReceived=function(){
+		return true;
+	};
+	
 	cnds.OnNotificationSendSuccess=function(){
 		return true;
 	};
@@ -432,6 +491,24 @@ cr.plugins_.appMobi = function(runtime)
 				appMobiObj['device']['hideSplashScreen']();
 		} catch(e) {}
 	};
+	
+	acts.deviceManagePower = function (stayOn, pluggedIn)
+	{
+		try {
+			shouldStayOn=false;
+			onlyWhenPluggedIn=false;
+			
+			if(stayOn==0){ shouldStayOn=true; }
+			if(pluggedIn==0){ onlyWhenPluggedIn=true; }
+			
+			if (isDC)
+				awex("AppMobi['device']['managePower']("+shouldStayOn+", "+onlyWhenPluggedIn+");");
+			else
+				appMobiObj['device']['managePower'](shouldStayOn,onlyWhenPluggedIn);
+		} catch(e) {}
+	};
+	
+	
 	
 	acts.deviceInstallUpdate = function ()
 	{
@@ -512,6 +589,93 @@ cr.plugins_.appMobi = function(runtime)
 			appMobiObj['device']['setRotateOrientation'](orientation === 0 ? "portrait" : "landscape");
 	};
 	
+	/*********************************************************	
+		GEOLOCATION
+	*********************************************************/	
+	acts.geoWatchPosition = function (tot, ha)
+	{ 
+		try {
+			if(tot<100){tot=10000;}
+			if(ha==0){ ha=true; }else{  ha=false; }
+			
+			if (isDC){
+				awex("window['geoWatchTimer']=AppMobi['geolocation']['watchPosition'](window['wvGeoProcessLocation'],window['wvGeoProcessLocationFail'],{timeout:"+tot+",enableHighAccuracy:"+ha+"});");
+			}else{
+				window['geoWatchTimer']=appMobiObj['geolocation']['watchPosition'](amev.geoProcessLocation,amev.geoProcessLocation,{timeout:tot,enableHighAccuracy:ha});
+			}
+			
+		} catch(e) {console.log(e);}
+	};
+	
+	acts.geoGetPosition = function ()
+	{ 
+		try {
+			
+			if (isDC){
+				awex("AppMobi['geolocation']['getCurrentPosition'](window['wvGeoProcessLocation'],window['wvGeoProcessLocationFail']);");
+			}else{
+				appMobiObj['geolocation']['getCurrentPosition'](amev.geoProcessLocation,amev.geoProcessLocation);
+			}
+			
+		} catch(e) {console.log(e);}
+	};
+	
+	
+	
+	acts.geoStopWatchPosition = function ()
+	{ 
+		try {
+		
+			if (isDC){
+				awex("AppMobi['geolocation']['clearWatch'](window['geoWatchTimer']);");
+			}else{
+				appMobiObj['geolocation']['clearWatch'](window['geoWatchTimer']);
+			}
+			
+		} catch(e) {console.log(e);}
+	};
+	
+	/*********************************************************	
+		ACCELEROMETER
+	*********************************************************/	
+	acts.accelWatch = function (freq, afr)
+	{ 
+		try {
+			if(freq<10){freq=10;}
+			if(afr==0){ afr=true; }else{  afr=false; }
+			
+			if (isDC){
+				awex("window['accelWatchTimer']=AppMobi['accelerometer']['watchAcceleration'](window['wvAccelSuccess'],window['wvAccelFail'],{frequency:"+freq+",adjustForRotation:"+afr+"});");
+			}else{
+				window['accelWatchTimer']=appMobiObj['accelerometer']['watchAcceleration'](amev.accelSuccess,amev.accelFail,{frequency:freq,adjustForRotation:afr});
+			}
+			
+		} catch(e) {console.log(e);}
+	};
+	
+	acts.accelStop=function(){
+		try{
+			if (isDC){
+				awex("AppMobi['accelerometer']['clearWatch'](window['accelWatchTimer']);");
+			}else{
+				appMobiObj['accelerometer']['clearWatch'](window['accelWatchTimer']);
+			}
+		
+		}catch(e){}
+	}
+	
+	acts.accelGet = function ()
+	{ 
+		try {
+			
+			if (isDC){
+				awex("AppMobi['accelerometer']['getCurrentAcceleration'](window['wvAccelSuccess'],window['wvAccelFail']);");
+			}else{
+				appMobiObj['accelerometer']['getCurrentAcceleration'](amev.accelSuccess,amev.accelFail);
+			}
+			
+		} catch(e) {console.log(e);}
+	};
 	/*********************************************************	
 		ANALYTICS
 	*********************************************************/		
@@ -961,6 +1125,16 @@ cr.plugins_.appMobi = function(runtime)
 	exps.DeviceBarcodeData = function(ret){ try{ ret.set_string(evtBarCodeResponse);}catch(e){ret.set_string('');} }
 	exps.DeviceRemoteStatus = function(ret){ try{ret.set_string(evtRemoteStatus);}catch(e){ret.set_string('');} }
 	
+	
+	/*********************************************************	
+		GEOLOCATION
+	*********************************************************/
+	exps.GeolocationLat = function(ret){ try{ret.set_float(evtGeoLat);}catch(e){ret.set_float(0);} }
+	exps.GeolocationLong = function(ret){ try{ret.set_float(evtGeoLong);}catch(e){ret.set_float(0);} }
+	
+	exps.AccelerationX = function(ret){ try{ret.set_float(evtAccelX);}catch(e){ret.set_float(0);} }
+	exps.AccelerationY = function(ret){ try{ret.set_float(evtAccelY);}catch(e){ret.set_float(0);} }
+	exps.AccelerationZ = function(ret){ try{ret.set_float(evtAccelZ);}catch(e){ret.set_float(0);} }
 	
 	/*********************************************************	
 		NOTIFICATIONS
