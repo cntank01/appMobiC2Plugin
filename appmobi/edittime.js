@@ -356,9 +356,9 @@ AddExpression(20, ef_return_string, "Push friend user id", "Notifications", "Pus
 AddExpression(21, ef_return_number, "Latitude", "Geolocation", "GeolocationLat", "Contains  the current Latitude");
 AddExpression(22, ef_return_number, "Longitude", "Geolocation", "GeolocationLong", "Contains  the current Longitude");
 
-AddExpression(22, ef_return_number, "X", "Accelerometer", "AccelerationX", "Contains  the current Longitude");
-AddExpression(22, ef_return_number, "Y", "Accelerometer", "AccelerationY", "Contains  the current Longitude");
-AddExpression(22, ef_return_number, "Z", "Accelerometer", "AccelerationZ", "Contains  the current Longitude");
+AddExpression(23, ef_return_number, "X", "Accelerometer", "AccelerationX", "Contains  the current Longitude");
+AddExpression(24, ef_return_number, "Y", "Accelerometer", "AccelerationY", "Contains  the current Longitude");
+AddExpression(25, ef_return_number, "Z", "Accelerometer", "AccelerationZ", "Contains  the current Longitude");
 
 
 ////////////////////////////////////////
