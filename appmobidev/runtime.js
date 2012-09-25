@@ -6,7 +6,7 @@ assert2(cr.plugins_, "cr.plugins_ not created");
 
 /////////////////////////////////////
 // Plugin class
-cr.plugins_.appMobi = function(runtime)
+cr.plugins_.appMobiDev = function(runtime)
 {
 	this.runtime = runtime;
 };
@@ -15,7 +15,7 @@ cr.plugins_.appMobi = function(runtime)
 
 (function ()
 {
-	var pluginProto = cr.plugins_.appMobi.prototype;
+	var pluginProto = cr.plugins_.appMobiDev.prototype;
 		
 	/////////////////////////////////////
 	// Object type class
@@ -34,14 +34,14 @@ cr.plugins_.appMobi = function(runtime)
 	};
 	
 	var appMobiEnabled=false;
-	var appMobiObj={};
+	var aMObj={};
 	var evtRemoteDataResponse='';
 	var evtBarCodeResponse='';
 	var evtConnection='';
 	var evtRemoteStatus='idle';
 	var accelerometer={x:0,y:0,z:0};
-	var appMobiRuntime = null;
-	var appMobiInst = null;
+	var aMRuntime = null;
+	var aMInst = null;
 	var notificationPushQueue=[];
 	var notificationPushQueueCount=0;
 	var pushFriendUserId='';
@@ -74,7 +74,7 @@ cr.plugins_.appMobi = function(runtime)
 			if(event.success)
 			{
 				evtRemoteDataResponse=event.response;
-				appMobiRuntime.trigger(cr.plugins_.appMobi.prototype.cnds.OnRemoteData, appMobiInst); //appMobiInst
+				aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnRemoteData, aMInst); //aMInst
 			}
 		} catch(e){}
 	};
@@ -85,7 +85,7 @@ cr.plugins_.appMobi = function(runtime)
 			if(evt.success)
 			{
 				evtBarCodeResponse=evt['codedata'];
-				appMobiRuntime.trigger(cr.plugins_.appMobi.prototype.cnds.OnBarcodeScanned, appMobiInst);
+				aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnBarcodeScanned, aMInst);
 			}
 		} catch(e){}
 	};
@@ -94,10 +94,10 @@ cr.plugins_.appMobi = function(runtime)
 		try {
 			if(evt.success)
 			{
-				notificationPushQueue = appMobiObj['notification']['getNotificationList'](); 
+				notificationPushQueue = aMObj['notification']['getNotificationList'](); 
 				notificationPushQueueCount = notificationPushQueue.length; 
 				
-				appMobiRuntime.trigger(cr.plugins_.appMobi.prototype.cnds.OnNotificationPushReceive, appMobiInst);
+				aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnNotificationPushReceive, aMInst);
 			}
 		} catch(e){}
 	}
@@ -107,7 +107,7 @@ cr.plugins_.appMobi = function(runtime)
 		try {
 			if(evt.success)
 			{
-				appMobiRuntime.trigger(cr.plugins_.appMobi.prototype.cnds.OnNotificationPushEnabled, appMobiInst);
+				aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnNotificationPushEnabled, aMInst);
 			}
 		} catch(e){}
 	}
@@ -117,7 +117,7 @@ cr.plugins_.appMobi = function(runtime)
 			if(evt.id!='')
 			{
 				if(!isDC){
-					appMobiObj['notification']['deletePushNotifications'](evt.id);
+					aMObj['notification']['deletePushNotifications'](evt.id);
 				}
 			}
 		} catch(e){}
@@ -129,12 +129,12 @@ cr.plugins_.appMobi = function(runtime)
 			{
 				if(!isDC){
 					pushFriendUserId=evt.userid;
-					appMobiRuntime.trigger(cr.plugins_.appMobi.prototype.cnds.OnNotificationPushUserFound, appMobiInst);
+					aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnNotificationPushUserFound, aMInst);
 				}
 			}else{
 				if(!isDC){
 					pushFriendUserId='';
-					appMobiRuntime.trigger(cr.plugins_.appMobi.prototype.cnds.OnNotificationPushUserNotFound, appMobiInst);
+					aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnNotificationPushUserNotFound, aMInst);
 				}
 			}
 		} catch(e){}
@@ -145,11 +145,11 @@ cr.plugins_.appMobi = function(runtime)
 			if(evt.success)
 			{
 				if(!isDC){
-					appMobiRuntime.trigger(cr.plugins_.appMobi.prototype.cnds.OnNotificationSendSuccess, appMobiInst);
+					aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnNotificationSendSuccess, aMInst);
 				}
 			}else{
 				if(!isDC){				
-					appMobiRuntime.trigger(cr.plugins_.appMobi.prototype.cnds.OnNotificationSendFail, appMobiInst);
+					aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnNotificationSendFail, aMInst);
 				}
 			}
 		} catch(e){}
@@ -173,24 +173,46 @@ cr.plugins_.appMobi = function(runtime)
 			if(event.success)
 			{
 				evtRemoteStatus='closed';
-				appMobiRuntime.trigger(cr.plugins_.appMobi.prototype.cnds.OnRemoteSiteClosed, appMobiInst);
+				aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnRemoteSiteClosed, aMInst);
 			}
 		} catch(e){}
 	};
 	
 	amev.onBack = function(event)
 	{
-		appMobiRuntime.trigger(cr.plugins_.appMobi.prototype.cnds.OnBack, appMobiInst);
+		aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnBack, aMInst);
 	};
 		
 	amev.audioStop=function(){	
-		appMobiRuntime.trigger(cr.plugins_.appMobi.prototype.cnds.OnAudioStop, appMobiInst);
+		aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnAudioStop, aMInst);
 	};
 	
-	amev.geoProcessLocation=function(p){
-		appMobiRuntime.trigger(cr.plugins_.appMobi.prototype.cnds.OnGeoLocationReceived, appMobiInst);
+	amev.pictureSuccess=function(evt){		
+		window['appMobiCameraFile']='';
+		try{
+			if (evt.success == true){ 
+				window['appMobiCameraFile']=evt.filename;
+				if(window['appMobiFileUploadURL'].length>0){
+					pictureURL=aMObj['device']['camera']['getPictureURL'](evt.filename);
+					aMObj['file']['uploadToServer'](pictureURL,window['appMobiFileUploadURL'], "", "image/jpeg", "");
+				}
+				aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnPictureSuccess, aMInst);
+			}
+		}catch(e){}
+	};
+	
+	amev.uploadComplete=function(evt){		
+		try{
+			if (evt.success == true){ 
+				aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnFileUploaded, aMInst);
+			}
+		}catch(e){}
+	};
+	
+	amev.geoProcessLocation=function(p){		
 		evtGeoLat=p.coords.latitude;
 		evtGeoLong=p.coords.longitude;
+		aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnGeoLocationReceived, aMInst);
 	};
 	amev.geoProcessLocationFail=function(p){
 		evtGeoLat=0;
@@ -198,11 +220,10 @@ cr.plugins_.appMobi = function(runtime)
 	};
 	
 	amev.accelSuccess=function(p){
-		appMobiRuntime.trigger(cr.plugins_.appMobi.prototype.cnds.OnAccellReceived, appMobiInst);
 		evtAccelX=p.x;
 		evtAccelY=p.y;
 		evtAccelZ=p.z;
-
+		aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnAccellReceived, aMInst);
 	};
 	amev.accelFail=function(p){
 		evtAccelX=0;
@@ -216,15 +237,15 @@ cr.plugins_.appMobi = function(runtime)
 	// called whenever an instance is created
 	instanceProto.onCreate = function()
 	{
-		appMobiRuntime = this.runtime;
-		appMobiInst = this;
+		aMRuntime = this.runtime;
+		aMInst = this;
 		isDC = this.runtime.isDirectCanvas;
 		
 		if (isDC){awex = AppMobi["webview"]["execute"]; }
 		
 		if (typeof window["AppMobi"] !== "undefined" && !isDC)
 		{
-			appMobiObj = window["AppMobi"];
+			aMObj = window["AppMobi"];
 			appMobiEnabled = true;
 			
 			document.addEventListener("appMobi.device.remote.data", amev.getRemoteDataEvent,false);
@@ -242,6 +263,9 @@ cr.plugins_.appMobi = function(runtime)
 			document.addEventListener("appMobi.notification.push.send", amev.notificationPushSent, false);
 			
 			document.addEventListener("appMobi.player.audio.stop", amev.audioStop, false);
+			
+			document.addEventListener("appMobi.camera.picture.add", amev.pictureSuccess, false);
+			document.addEventListener("appMobi.file.upload",amev.uploadComplete,false);
 		}
 	};
 	
@@ -251,7 +275,7 @@ cr.plugins_.appMobi = function(runtime)
 	
 	window['dcNotificationEnabled']=function(){
 		try{
-			appMobiRuntime.trigger(cr.plugins_.appMobi.prototype.cnds.OnNotificationPushEnabled, appMobiInst);
+			aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnNotificationPushEnabled, aMInst);
 		}catch(e){}
 	}
 	
@@ -261,35 +285,35 @@ cr.plugins_.appMobi = function(runtime)
 			queue=JSON.parse(d);
 			notificationPushQueue = queue;
 			notificationPushQueueCount = notificationPushQueue.length;
-			appMobiRuntime.trigger(window['cr']['plugins_'].appMobi.prototype.cnds.OnNotificationPushReceive, appMobiInst);
+			aMRuntime.trigger(window['cr']['plugins_'].appMobiDev.prototype.cnds.OnNotificationPushReceive, aMInst);
 			
 		} catch(e){console.log(e);}
 	};
 
 	window['dcNotificationRichClosed']=function(id){
 		try{
-			awex("appMobiObj['notification']['deletePushNotifications']('"+id+"');");
+			awex("aMObj['notification']['deletePushNotifications']('"+id+"');");
 		}catch(e){}
 	};
 	
 	window['dcNotificationPushUserFound']=function(id){
 		try{
 			pushFriendUserId=id;
-			appMobiRuntime.trigger(cr.plugins_.appMobi.prototype.cnds.OnNotificationPushUserFound, appMobiInst);
+			aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnNotificationPushUserFound, aMInst);
 		}catch(e){}
 	};
 	
 	window['dcNotificationPushUserNotFound']=function(){
 		try{
 			pushFriendUserId='';
-			appMobiRuntime.trigger(cr.plugins_.appMobi.prototype.cnds.OnNotificationPushUserNotFound, appMobiInst);
+			aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnNotificationPushUserNotFound, aMInst);
 
 		}catch(e){}
 	};
 	
 	window['dcNotificationPushSentSuccess']=function(){
 		try{		
-			appMobiRuntime.trigger(cr.plugins_.appMobi.prototype.cnds.OnNotificationSendSuccess, appMobiInst);
+			aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnNotificationSendSuccess, aMInst);
 		}catch(e){}
 	};
 	
@@ -297,19 +321,19 @@ cr.plugins_.appMobi = function(runtime)
 	
 	window['dcNotificationPushSentFail']=function(){
 		try{		
-			appMobiRuntime.trigger(cr.plugins_.appMobi.prototype.cnds.OnNotificationSendFail, appMobiInst);
+			aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnNotificationSendFail, aMInst);
 		}catch(e){}
 	};
 	
 	window['dcGetRemoteData']=function(data){
 		try{
 			evtRemoteDataResponse=decodeURIComponent(data);
-			appMobiRuntime.trigger(cr.plugins_.appMobi.prototype.cnds.OnRemoteData, appMobiInst); //appMobiInst
+			aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnRemoteData, aMInst); //aMInst
 		}catch(e){}
 	};
 	
 	window['amevGeoProcessLocation']=function(lat,lng){
-		appMobiRuntime.trigger(cr.plugins_.appMobi.prototype.cnds.OnGeoLocationReceived, appMobiInst);
+		aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnGeoLocationReceived, aMInst);
 		evtGeoLat=lat;
 		evtGeoLong=lng;
 	};
@@ -319,7 +343,7 @@ cr.plugins_.appMobi = function(runtime)
 	window['geoWatchTimer']={};
 	
 	window['amevAccelProcess']=function(x,y, z){
-		appMobiRuntime.trigger(cr.plugins_.appMobi.prototype.cnds.OnAccellReceived, appMobiInst);
+		aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnAccellReceived, aMInst);
 		evtAccelX=x;
 		evtAccelY=y;
 		evtAccelZ=z;
@@ -327,8 +351,21 @@ cr.plugins_.appMobi = function(runtime)
 	
 	window['amevGeoProcessLocationFail']=function(p){}
 	
+	window['amevFileUploaded']=function(){
+		try{
+			aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnFileUploaded, aMInst);
+		}catch(e){}
+	}
+	window['amevPictureSuccess']=function(){
+		try{
+			aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnPictureSuccess, aMInst);
+		}catch(e){}
+	}
+	
 	window['accelWatchTimer']={};
 	
+	window['appMobiCameraFile']='';
+	window['appMobiFileUploadURL']='';
 	
 	//////////////////////////////////////
 	// Conditions
@@ -343,7 +380,7 @@ cr.plugins_.appMobi = function(runtime)
 		if (!appMobiEnabled || isDC)
 			return false;
 		
-		return appMobiObj['device']['hasCaching'];
+		return aMObj['device']['hasCaching'];
 	};
 	
 	cnds.deviceHasPush = function ()
@@ -351,7 +388,7 @@ cr.plugins_.appMobi = function(runtime)
 		if (!appMobiEnabled || isDC)
 			return false;
 			
-		return appMobiObj['device']['hasPush'];
+		return aMObj['device']['hasPush'];
 	};
 	
 	cnds.deviceHasStreaming = function ()
@@ -359,7 +396,7 @@ cr.plugins_.appMobi = function(runtime)
 		if (!appMobiEnabled || isDC)
 			return false;
 			
-		return appMobiObj['device']['hasStreaming'];
+		return aMObj['device']['hasStreaming'];
 	};
 	
 	cnds.deviceHasUpdates = function ()
@@ -367,7 +404,7 @@ cr.plugins_.appMobi = function(runtime)
 		if (!appMobiEnabled || isDC)
 			return false;
 			
-		return appMobiObj['device']['hasUpdates'];
+		return aMObj['device']['hasUpdates'];
 	};
 	
 	cnds.isInAppMobi = function ()
@@ -382,7 +419,7 @@ cr.plugins_.appMobi = function(runtime)
 		if (!appMobiEnabled || isDC)
 			return (o === 0);	// assume portrait when not in appMobi
 			
-		return orients_array[o] === parseInt(appMobiObj['device']['orientation']);
+		return orients_array[o] === parseInt(aMObj['device']['orientation']);
 	};
 	
 	cnds.compareInitialOrientation = function (o)
@@ -390,7 +427,7 @@ cr.plugins_.appMobi = function(runtime)
 		if (!appMobiEnabled || isDC)
 			return (o === 0);	// assume was in portrait when not in appMobi
 			
-		return orients_array[o] === parseInt(appMobiObj['device']['initialOrientation']);
+		return orients_array[o] === parseInt(aMObj['device']['initialOrientation']);
 	};
 	
 	cnds.OnBarcodeScanned = function ()
@@ -426,6 +463,10 @@ cr.plugins_.appMobi = function(runtime)
 		return true;
 	};
 	
+	cnds.OnFileUploaded=function(){
+		return true;
+	};
+	
 	cnds.OnNotificationSendSuccess=function(){
 		return true;
 	};
@@ -449,6 +490,16 @@ cr.plugins_.appMobi = function(runtime)
 		return true;
 	};
 	
+	cnds.OnPictureSuccess = function ()
+	{
+		return true;
+	};
+	
+	cnds.OnPictureListLoaded = function ()
+	{
+		return true;
+	};
+	
 	////////////////////////////////////// 
 	// Actions
 	pluginProto.acts = {};
@@ -460,7 +511,7 @@ cr.plugins_.appMobi = function(runtime)
 			if (isDC)
 				awex("AppMobi['device']['closeRemoteSite']();");
 			else
-				appMobiObj['device']['closeRemoteSite']();
+				aMObj['device']['closeRemoteSite']();
 		} catch(e) {}
 	};
 	acts.deviceGetRemoteData = function (method, url, body, id)
@@ -472,12 +523,12 @@ cr.plugins_.appMobi = function(runtime)
 		}else{	
 			try {
 				evtRemoteDataResponse=''; 
-				var parameters = new appMobiObj['Device']['RemoteDataParameters']();
+				var parameters = new aMObj['Device']['RemoteDataParameters']();
 				parameters.url = url;
 				parameters.id = id;
 				parameters.method = method;
 				parameters.body = body;
-				appMobiObj['device']['getRemoteDataExt'](parameters);
+				aMObj['device']['getRemoteDataExt'](parameters);
 			} catch(e) {console.log('grd',e);}
 		}
 	}
@@ -488,7 +539,7 @@ cr.plugins_.appMobi = function(runtime)
 			if (isDC)
 				awex("AppMobi['device']['hideSplashScreen']();");
 			else
-				appMobiObj['device']['hideSplashScreen']();
+				aMObj['device']['hideSplashScreen']();
 		} catch(e) {}
 	};
 	
@@ -504,7 +555,7 @@ cr.plugins_.appMobi = function(runtime)
 			if (isDC)
 				awex("AppMobi['device']['managePower']("+shouldStayOn+", "+onlyWhenPluggedIn+");");
 			else
-				appMobiObj['device']['managePower'](shouldStayOn,onlyWhenPluggedIn);
+				aMObj['device']['managePower'](shouldStayOn,onlyWhenPluggedIn);
 		} catch(e) {}
 	};
 	
@@ -516,7 +567,7 @@ cr.plugins_.appMobi = function(runtime)
 			if (isDC)
 				awex("AppMobi['device']['installUpdate']();");
 			else
-				appMobiObj['device']['installUpdate']();
+				aMObj['device']['installUpdate']();
 		} catch(e) {}
 	};
 	
@@ -526,14 +577,14 @@ cr.plugins_.appMobi = function(runtime)
 			if (isDC)
 				awex("AppMobi['device']['launchExternal']('" + url + "');");
 			else
-				appMobiObj['device']['launchExternal'](url);
+				aMObj['device']['launchExternal'](url);
 		} catch(e) {}
 	};
 	
 	acts.deviceMainViewExecute = function (cmd)
 	{
 		try {
-			appMobiObj['device']['mainViewExecute'](cmd);
+			aMObj['device']['mainViewExecute'](cmd);
 		} catch(e) {}
 	};
 	
@@ -543,7 +594,7 @@ cr.plugins_.appMobi = function(runtime)
 			return;
 			
 		try {
-			evtBarCodeResponse=''; appMobiObj['device']['scanBarcode']();
+			evtBarCodeResponse=''; aMObj['device']['scanBarcode']();
 		} catch(e) { console.log('Barcode Error',e);}
 	};
 	
@@ -553,7 +604,7 @@ cr.plugins_.appMobi = function(runtime)
 			return;
 		
 		try {
-			evtConnection=''; appMobiObj['device']['updateConnection']();
+			evtConnection=''; aMObj['device']['updateConnection']();
 		} catch(e) {}
 	};
 	
@@ -563,7 +614,7 @@ cr.plugins_.appMobi = function(runtime)
 			return;
 			
 		try {
-			evtRemoteStatus='open'; appMobiObj['device']['showRemoteSiteExt'](url, px, py, lx, ly, w, h);
+			evtRemoteStatus='open'; aMObj['device']['showRemoteSiteExt'](url, px, py, lx, ly, w, h);
 		} catch(e) {}
 	};
 	
@@ -575,7 +626,7 @@ cr.plugins_.appMobi = function(runtime)
 		if (isDC)
 			awex("AppMobi['device']['setAutoRotate'](" + (allow ? "true" : "false") + ");");
 		else
-			appMobiObj['device']['setAutoRotate'](allow !== 0);
+			aMObj['device']['setAutoRotate'](allow !== 0);
 	};
 	
 	acts.deviceSetRotateOrientation = function (orientation)
@@ -586,7 +637,7 @@ cr.plugins_.appMobi = function(runtime)
 		if (isDC)
 			awex("AppMobi['device']['setRotateOrientation'](" + (orientation === 0 ? "'portrait'" : "'landscape'") + ");");
 		else
-			appMobiObj['device']['setRotateOrientation'](orientation === 0 ? "portrait" : "landscape");
+			aMObj['device']['setRotateOrientation'](orientation === 0 ? "portrait" : "landscape");
 	};
 	
 	/*********************************************************	
@@ -601,7 +652,7 @@ cr.plugins_.appMobi = function(runtime)
 			if (isDC){
 				awex("window['geoWatchTimer']=AppMobi['geolocation']['watchPosition'](window['wvGeoProcessLocation'],window['wvGeoProcessLocationFail'],{timeout:"+tot+",enableHighAccuracy:"+ha+"});");
 			}else{
-				window['geoWatchTimer']=appMobiObj['geolocation']['watchPosition'](amev.geoProcessLocation,amev.geoProcessLocation,{timeout:tot,enableHighAccuracy:ha});
+				window['geoWatchTimer']=aMObj['geolocation']['watchPosition'](amev.geoProcessLocation,amev.geoProcessLocation,{timeout:tot,enableHighAccuracy:ha});
 			}
 			
 		} catch(e) {console.log(e);}
@@ -614,7 +665,7 @@ cr.plugins_.appMobi = function(runtime)
 			if (isDC){
 				awex("AppMobi['geolocation']['getCurrentPosition'](window['wvGeoProcessLocation'],window['wvGeoProcessLocationFail']);");
 			}else{
-				appMobiObj['geolocation']['getCurrentPosition'](amev.geoProcessLocation,amev.geoProcessLocation);
+				aMObj['geolocation']['getCurrentPosition'](amev.geoProcessLocation,amev.geoProcessLocation);
 			}
 			
 		} catch(e) {console.log(e);}
@@ -629,7 +680,7 @@ cr.plugins_.appMobi = function(runtime)
 			if (isDC){
 				awex("AppMobi['geolocation']['clearWatch'](window['geoWatchTimer']);");
 			}else{
-				appMobiObj['geolocation']['clearWatch'](window['geoWatchTimer']);
+				aMObj['geolocation']['clearWatch'](window['geoWatchTimer']);
 			}
 			
 		} catch(e) {console.log(e);}
@@ -647,7 +698,7 @@ cr.plugins_.appMobi = function(runtime)
 			if (isDC){
 				awex("window['accelWatchTimer']=AppMobi['accelerometer']['watchAcceleration'](window['wvAccelSuccess'],window['wvAccelFail'],{frequency:"+freq+",adjustForRotation:"+afr+"});");
 			}else{
-				window['accelWatchTimer']=appMobiObj['accelerometer']['watchAcceleration'](amev.accelSuccess,amev.accelFail,{frequency:freq,adjustForRotation:afr});
+				window['accelWatchTimer']=aMObj['accelerometer']['watchAcceleration'](amev.accelSuccess,amev.accelFail,{frequency:freq,adjustForRotation:afr});
 			}
 			
 		} catch(e) {console.log(e);}
@@ -658,7 +709,7 @@ cr.plugins_.appMobi = function(runtime)
 			if (isDC){
 				awex("AppMobi['accelerometer']['clearWatch'](window['accelWatchTimer']);");
 			}else{
-				appMobiObj['accelerometer']['clearWatch'](window['accelWatchTimer']);
+				aMObj['accelerometer']['clearWatch'](window['accelWatchTimer']);
 			}
 		
 		}catch(e){}
@@ -671,11 +722,81 @@ cr.plugins_.appMobi = function(runtime)
 			if (isDC){
 				awex("AppMobi['accelerometer']['getCurrentAcceleration'](window['wvAccelSuccess'],window['wvAccelFail']);");
 			}else{
-				appMobiObj['accelerometer']['getCurrentAcceleration'](amev.accelSuccess,amev.accelFail);
+				aMObj['accelerometer']['getCurrentAcceleration'](amev.accelSuccess,amev.accelFail);
 			}
 			
 		} catch(e) {console.log(e);}
 	};
+	
+	
+	/*********************************************************	
+		CAMERA
+		camera.takePicture(quality, saveToLibrary, pictureType);
+	*********************************************************/
+	
+	acts.cameraTake = function (quality, save, uploadUrl)
+	{ 
+		try {
+			var ext='jpg';
+			var saveToLibrary=false;
+			
+			if(save==0){saveToLibrary=true;}
+			if(quality<0 || quality>100){quality=70;}
+			
+			window['appMobiFileUploadURL']=uploadUrl;
+			
+			if (isDC){
+				awex("AppMobi['camera']['takePicture']("+quality+","+saveToLibrary+",'"+ext+"');");
+			}else{
+				aMObj['camera']['takePicture'](quality,saveToLibrary,ext);
+			}
+			
+		} catch(e) {console.log(e);}
+	};
+	
+	acts.cameraGetPictureList=function(){
+		if (isDC){
+			awex("window['appmobiPictureList']=AppMobi['camera']['getPictureList']();");
+		}else{
+			window['appmobiPictureList']=aMObj['camera']['getPictureList']();
+		}
+		aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnPictureListLoaded, aMInst);
+	}
+	
+	acts.cameraDeletePicture=function(fileName){
+		try{
+			if(fileName.length==0){ return false; }
+			
+			if (isDC){
+				awex("AppMobi['camera']['deletePicture']('"+fileName+"');");
+			}else{
+				aMObj['camera']['deletePicture'](fileName);
+			}
+		}catch(e){}
+	}
+	
+	acts.cameraClearPictures=function(){
+		try{
+					
+			if (isDC){
+				awex("AppMobi['camera']['clearPictures']();");
+			}else{
+				aMObj['camera']['clearPictures']();
+			}
+		}catch(e){}
+	}
+	
+	acts.cameraImportPicture=function(){
+		try{
+					
+			if (isDC){
+				awex("AppMobi['camera']['importPicture']();");
+			}else{
+				aMObj['camera']['importPicture']();
+			}
+		}catch(e){}
+	}
+	
 	/*********************************************************	
 		ANALYTICS
 	*********************************************************/		
@@ -686,7 +807,7 @@ cr.plugins_.appMobi = function(runtime)
 			if (isDC)
 				awex("AppMobi['analytics']['logPageEvent']('" + event + "', '" + qs + "', 200, 'GET', 0, 'index.html');");
 			else
-				appMobiObj['analytics']['logPageEvent'](event, qs, 200, 'GET', 0, 'index.html'); 
+				aMObj['analytics']['logPageEvent'](event, qs, 200, 'GET', 0, 'index.html'); 
 		}catch(e){ console.log(e); }
 	};	
 	
@@ -707,7 +828,7 @@ cr.plugins_.appMobi = function(runtime)
 			if (isDC)
 				awex("AppMobi['notification']['addPushUser']('" + userId + "', '" + password + "', '"+email+"');");
 			else
-				appMobiObj['notification']['addPushUser'](userId, password, email); 
+				aMObj['notification']['addPushUser'](userId, password, email); 
 		}catch(e){ console.log(e); }
 	};	
 	
@@ -721,7 +842,7 @@ cr.plugins_.appMobi = function(runtime)
 			if (isDC){
 				awex("AppMobi['notification']['alert']('" + message + "', '" + title + "', '"+buttontext+"');");
 			}else{
-				appMobiObj['notification']['alert'](message,title,buttontext); 
+				aMObj['notification']['alert'](message,title,buttontext); 
 			}
 		}catch(e){ console.log(e); }
 	};	
@@ -735,7 +856,7 @@ cr.plugins_.appMobi = function(runtime)
 		if (isDC){
 			awex("AppMobi['notification']['beep']("+count+");");
 		}else{
-			appMobiObj['notification']['beep'](count); 
+			aMObj['notification']['beep'](count); 
 		}
 
 	}
@@ -743,7 +864,7 @@ cr.plugins_.appMobi = function(runtime)
 		if (isDC){
 			awex("AppMobi['notification']['vibrate']();");
 		}else{
-			appMobiObj['notification']['vibrate'](); 
+			aMObj['notification']['vibrate'](); 
 		}
 	}
 	
@@ -751,7 +872,7 @@ cr.plugins_.appMobi = function(runtime)
 		if (isDC){
 			awex("AppMobi['notification']['deletePushUser']();");
 		}else{
-			appMobiObj['notification']['deletePushUser'](); 
+			aMObj['notification']['deletePushUser'](); 
 		}
 	}
 	
@@ -774,7 +895,7 @@ cr.plugins_.appMobi = function(runtime)
 			awex("dcNotificationSetUserAttributes('"+s+"');");
 			}catch(e){console.log(e);}
 		}else{
-			var attributes = new appMobiObj['Notification']['PushUserAttributes']();
+			var attributes = new aMObj['Notification']['PushUserAttributes']();
 			if(s1.length>0){
 				if(s1=='*'){ s1=''; }
 				attributes.s1 = s1;
@@ -816,7 +937,7 @@ cr.plugins_.appMobi = function(runtime)
 				attributes.n4 = n4;
 			}
 	
-			appMobiObj['notification']['setPushUserAttributes'](attributes); 
+			aMObj['notification']['setPushUserAttributes'](attributes); 
 		}
 	}
 	
@@ -828,7 +949,7 @@ cr.plugins_.appMobi = function(runtime)
 		if (isDC){
 			awex("AppMobi['notification']['showRichPushViewer']("+notificationPushQueue[i]+", 10, 10, 100, 100, 80, 80);");
 		}else{
-			appMobiObj['notification']['showRichPushViewer'](notificationPushQueue[i], 10, 10, 100, 100, 80, 80); 
+			aMObj['notification']['showRichPushViewer'](notificationPushQueue[i], 10, 10, 100, 100, 80, 80); 
 		}
 	}
 	
@@ -840,7 +961,7 @@ cr.plugins_.appMobi = function(runtime)
 		if (isDC){
 			awex("AppMobi['notification']['findPushUser']('','"+email+"');");
 		}else{
-			appMobiObj['notification']['findPushUser']("",email); 
+			aMObj['notification']['findPushUser']("",email); 
 		}
 	}
 	
@@ -852,7 +973,7 @@ cr.plugins_.appMobi = function(runtime)
 		if (isDC){
 			awex("AppMobi['notification']['sendPushNotification']('"+id+"', '"+message+"', '"+data+"');");
 		}else{
-			appMobiObj['notification']['sendPushNotification'](id, message, data); 
+			aMObj['notification']['sendPushNotification'](id, message, data); 
 		}
 		
 	}
@@ -867,7 +988,7 @@ cr.plugins_.appMobi = function(runtime)
 			return;
 			
 		try{ 
-			appMobiObj['cache']['addToMediaCache'](url); 
+			aMObj['cache']['addToMediaCache'](url); 
 		}catch(e){ console.log(e); }
 	}
 	
@@ -877,7 +998,7 @@ cr.plugins_.appMobi = function(runtime)
 			return;
 			
 		try{ 
-			appMobiObj['cache']['clearAllCookies'](); 
+			aMObj['cache']['clearAllCookies'](); 
 		}catch(e){ console.log(e); }
 	}
 	
@@ -887,7 +1008,7 @@ cr.plugins_.appMobi = function(runtime)
 			return;
 			
 		try{ 
-			appMobiObj['cache']['clearMediaCache'](); 
+			aMObj['cache']['clearMediaCache'](); 
 		}catch(e){ console.log(e); }
 	}
 	
@@ -897,7 +1018,7 @@ cr.plugins_.appMobi = function(runtime)
 			return;
 			
 		try{ 
-			appMobiObj['cache']['removeCookie'](v); 
+			aMObj['cache']['removeCookie'](v); 
 		}catch(e){ console.log(e); }
 	}
 	
@@ -907,7 +1028,7 @@ cr.plugins_.appMobi = function(runtime)
 			return;
 			
 		try{ 
-			appMobiObj['cache']['removeFromMediaCache'](v); 
+			aMObj['cache']['removeFromMediaCache'](v); 
 		}catch(e){ console.log(e); }
 	}
 	
@@ -917,7 +1038,7 @@ cr.plugins_.appMobi = function(runtime)
 			return;
 			
 		try{ 
-			appMobiObj['cache']['setCookie'](name, value, expires); 
+			aMObj['cache']['setCookie'](name, value, expires); 
 		}catch(e){ console.log(e); }
 	}
 	
@@ -929,7 +1050,7 @@ cr.plugins_.appMobi = function(runtime)
 		if (isDC)
 			awex("AppMobi['device']['addVirtualPage']();");
 		else
-			appMobiObj['device']['addVirtualPage']();
+			aMObj['device']['addVirtualPage']();
 	};
 	
 	acts.RemoveVirtualPage = function ()
@@ -940,7 +1061,7 @@ cr.plugins_.appMobi = function(runtime)
 		if (isDC)
 			awex("AppMobi['device']['removeVirtualPage']();");
 		else
-			appMobiObj['device']['removeVirtualPage']();
+			aMObj['device']['removeVirtualPage']();
 	};
 	
 	
@@ -956,7 +1077,7 @@ cr.plugins_.appMobi = function(runtime)
 		if (isDC){
 			awex("AppMobi['device']['sendSMS']("+bodyText, toNumber+");");
 		}else{
-			appMobiObj['device']['sendSMS'](bodyText, toNumber);
+			aMObj['device']['sendSMS'](bodyText, toNumber);
 		}
 	};
 	
@@ -979,10 +1100,10 @@ cr.plugins_.appMobi = function(runtime)
 					awex("AppMobi['player']['loadSound']('./media/"+sndFile[0]+".ogg', "+cnt+");");
 				}				
 			}else{
-				if(appMobiObj['device']['platform'].toLowerCase()=='ios'){ 
-					appMobiObj['player']['loadSound']('./media/'+sndFile[0]+'.m4a', cnt);
+				if(aMObj['device']['platform'].toLowerCase()=='ios'){ 
+					aMObj['player']['loadSound']('./media/'+sndFile[0]+'.m4a', cnt);
 				}else{ 
-					appMobiObj['player']['loadSound']('./media/'+sndFile[0]+'.ogg', cnt);					
+					aMObj['player']['loadSound']('./media/'+sndFile[0]+'.ogg', cnt);					
 				}
 				
 			}
@@ -1003,10 +1124,10 @@ cr.plugins_.appMobi = function(runtime)
 					awex("AppMobi['player']['playSound']('./media/"+sndFile+".ogg');");
 				}
 			}else{	
-				if(appMobiObj['device']['platform'].toLowerCase()=='ios'){ 
-					appMobiObj['player']['playSound']('./media/'+sndFile+'.m4a');
+				if(aMObj['device']['platform'].toLowerCase()=='ios'){ 
+					aMObj['player']['playSound']('./media/'+sndFile+'.m4a');
 				}else{
-					appMobiObj['player']['playSound']('./media/'+sndFile+'.ogg');
+					aMObj['player']['playSound']('./media/'+sndFile+'.ogg');
 				}				
 			}
 		}catch(e){console.log('playsound error',e);}
@@ -1030,10 +1151,10 @@ cr.plugins_.appMobi = function(runtime)
 					awex("AppMobi['player']['startAudio']('./media/"+sndFile+".ogg',"+boolLoop+");");
 				}
 			}else{
-				if(appMobiObj['device']['platform'].toLowerCase()=='ios'){ 
-					appMobiObj['player']['startAudio']('./media/'+sndFile+'.m4a',boolLoop);				
+				if(aMObj['device']['platform'].toLowerCase()=='ios'){ 
+					aMObj['player']['startAudio']('./media/'+sndFile+'.m4a',boolLoop);				
 				}else{ 
-					appMobiObj['player']['startAudio']('./media/'+sndFile+'.ogg',boolLoop);
+					aMObj['player']['startAudio']('./media/'+sndFile+'.ogg',boolLoop);
 				}
 				
 			}
@@ -1049,7 +1170,7 @@ cr.plugins_.appMobi = function(runtime)
 		if (isDC)
 			awex("AppMobi['player']['stopAudio']();");
 		else
-			appMobiObj['player']['stopAudio']();
+			aMObj['player']['stopAudio']();
 		}catch(e){ console.log('STOP AUDIO ERROR',e);}
 	};
 	
@@ -1062,7 +1183,7 @@ cr.plugins_.appMobi = function(runtime)
 		if (isDC)
 			awex("AppMobi['player']['toggleAudio']();");
 		else
-			appMobiObj['player']['toggleAudio']();
+			aMObj['player']['toggleAudio']();
 		}catch(e){console.log('TOGGLE AUDIO ERROR',e);}
 	};
 	
@@ -1075,7 +1196,7 @@ cr.plugins_.appMobi = function(runtime)
 		if (isDC)
 			awex("AppMobi['player']['unloadAllSounds']();");
 		else
-			appMobiObj['player']['unloadAllSounds']();
+			aMObj['player']['unloadAllSounds']();
 		}catch(e){}
 	};
 	
@@ -1093,10 +1214,10 @@ cr.plugins_.appMobi = function(runtime)
 				awex("AppMobi['player']['unloadSound']('./media/"+sndFile+".ogg',"+boolLoop+");");
 			}
 		else
-			if(appMobiObj['device']['platform'].toLowerCase()=='ios'){ 
-				appMobiObj['player']['unloadSound']('./media/'+sndFile+'.m4a');
+			if(aMObj['device']['platform'].toLowerCase()=='ios'){ 
+				aMObj['player']['unloadSound']('./media/'+sndFile+'.m4a');
 			}else{ 
-				appMobiObj['player']['unloadSound']('./media/'+sndFile+'.ogg');
+				aMObj['player']['unloadSound']('./media/'+sndFile+'.ogg');
 			}
 			
 		}catch(e){}
@@ -1110,17 +1231,17 @@ cr.plugins_.appMobi = function(runtime)
 	/*********************************************************	
 		DEVICE
 	*********************************************************/	
-	exps.AppMobiVersion = function(ret){ try{ret.set_string(appMobiObj['device']['appmobiversion']);}catch(e){ret.set_string('');}	}
-	exps.DeviceConnection = function(ret){ try{ret.set_string(appMobiObj['device']['connection']);}catch(e){ret.set_string('');}	}
-	exps.InitialOrientation = function(ret){ try{ret.set_int(parseInt(appMobiObj['device']['initialOrientation']));}catch(e){ret.set_int(0);}	}
-	exps.DeviceLastStation = function(ret){ try{ret.set_string(appMobiObj['device']['lastStation']);}catch(e){ret.set_string('');}	}
-	exps.DeviceModel = function(ret){ try{ret.set_string(appMobiObj['device']['model']);}catch(e){ret.set_string('');}	}
-	exps.Orientation = function(ret){ try{ret.set_int(parseInt(appMobiObj['device']['orientation']));}catch(e){ret.set_int(0);}	}
-	exps.DeviceOSVersion = function(ret){ try{ret.set_string(appMobiObj['device']['osversion']);}catch(e){ret.set_string('');}	}
-	exps.DevicePhonegapVersion = function(ret){ try{ret.set_string(appMobiObj['device']['phonegapversion']);}catch(e){ret.set_string('');}	}
-	exps.DevicePlatform = function(ret){ try{ret.set_string(appMobiObj['device']['platform']);}catch(e){ret.set_string('');}	}
-	exps.DeviceQueryString = function(ret){ try{ret.set_string(appMobiObj['device']['queryString']);}catch(e){ret.set_string('');}	}
-	exps.DeviceUUID = function(ret){ try{ret.set_string(appMobiObj['device']['uuid']);}catch(e){ret.set_string('');}	}
+	exps.AppMobiVersion = function(ret){ try{ret.set_string(aMObj['device']['appmobiversion']);}catch(e){ret.set_string('');}	}
+	exps.DeviceConnection = function(ret){ try{ret.set_string(aMObj['device']['connection']);}catch(e){ret.set_string('');}	}
+	exps.InitialOrientation = function(ret){ try{ret.set_int(parseInt(aMObj['device']['initialOrientation']));}catch(e){ret.set_int(0);}	}
+	exps.DeviceLastStation = function(ret){ try{ret.set_string(aMObj['device']['lastStation']);}catch(e){ret.set_string('');}	}
+	exps.DeviceModel = function(ret){ try{ret.set_string(aMObj['device']['model']);}catch(e){ret.set_string('');}	}
+	exps.Orientation = function(ret){ try{ret.set_int(parseInt(aMObj['device']['orientation']));}catch(e){ret.set_int(0);}	}
+	exps.DeviceOSVersion = function(ret){ try{ret.set_string(aMObj['device']['osversion']);}catch(e){ret.set_string('');}	}
+	exps.DevicePhonegapVersion = function(ret){ try{ret.set_string(aMObj['device']['phonegapversion']);}catch(e){ret.set_string('');}	}
+	exps.DevicePlatform = function(ret){ try{ret.set_string(aMObj['device']['platform']);}catch(e){ret.set_string('');}	}
+	exps.DeviceQueryString = function(ret){ try{ret.set_string(aMObj['device']['queryString']);}catch(e){ret.set_string('');}	}
+	exps.DeviceUUID = function(ret){ try{ret.set_string(aMObj['device']['uuid']);}catch(e){ret.set_string('');}	}
 	exps.DeviceRemoteData = function(ret){ try{ret.set_string(evtRemoteDataResponse);}catch(e){ret.set_string('');}	}
 	exps.DeviceBarcodeData = function(ret){ try{ ret.set_string(evtBarCodeResponse);}catch(e){ret.set_string('');} }
 	exps.DeviceRemoteStatus = function(ret){ try{ret.set_string(evtRemoteStatus);}catch(e){ret.set_string('');} }
@@ -1148,7 +1269,7 @@ cr.plugins_.appMobi = function(runtime)
 	exps.PushNotificationType = function(ret,i){ 
 		try{
 			if(typeof i === 'undefined' ){i=0;}
-			msgObj = appMobiObj['notification']['getNotificationData'](notificationPushQueue[i]); 
+			msgObj = aMObj['notification']['getNotificationData'](notificationPushQueue[i]); 
 			if (msgObj['isRich'] == false) {
 				ret.set_string('plaintext');
 			}else{
@@ -1161,12 +1282,12 @@ cr.plugins_.appMobi = function(runtime)
 		try{
 			if(typeof i === 'undefined' ){i=0;}
 			if(typeof removeMessage === 'undefined' ){removeMessage='';}
-			var msgObj = appMobiObj['notification']['getNotificationData'](notificationPushQueue[i]); 
+			var msgObj = aMObj['notification']['getNotificationData'](notificationPushQueue[i]); 
 
 			if (msgObj['isRich']==false) {
 				ret.set_string(unescape(msgObj['msg']));	
 				if(removeMessage=='remove'){
-					appMobiObj['notification']['deletePushNotifications'](msgObj['id']);
+					aMObj['notification']['deletePushNotifications'](msgObj['id']);
 				}
 			}else{
 				ret.set_string('');
@@ -1179,11 +1300,11 @@ cr.plugins_.appMobi = function(runtime)
 			if(typeof i === 'undefined' ){i=0;}
 			if(typeof removeMessage === 'undefined' ){removeMessage=true;}
 			
-			msgObj = appMobiObj['notification']['getNotificationData'](notificationPushQueue[i]); 
+			msgObj = aMObj['notification']['getNotificationData'](notificationPushQueue[i]); 
 			if(msgObj['data']!='null'){
 				ret.set_string(msgObj['data']);
 				if(removeMessage=='remove'){
-					appMobiObj['notification']['deletePushNotifications'](msgObj['id']);
+					aMObj['notification']['deletePushNotifications'](msgObj['id']);
 				}
 			}else{
 				ret.set_string('');
@@ -1200,14 +1321,31 @@ cr.plugins_.appMobi = function(runtime)
 	*********************************************************/
 	exps.Cookie = function(ret, p){ 
 		try{
-			ret.set_string(appMobiObj['cache']['getCookie'](p)); 
+			ret.set_string(aMObj['cache']['getCookie'](p)); 
 		}catch(e){ ret.set_string(''); }
 	}
 	
 	exps.LocalMediaCacheURL = function(ret, p){ 
 		try{
-			ret.set_string(appMobiObj['cache']['getMediaCacheLocalURL'](p)); 
+			ret.set_string(aMObj['cache']['getMediaCacheLocalURL'](p)); 
 		}catch(e){ ret.set_string(''); }
 	}	
+	
+	
+	/*********************************************************	
+		CAMERA 
+	*********************************************************/
+	exps.PictureListCount = function(ret){ 
+		try{
+			ret.set_int(window['appmobiPictureList'].length);
+		}catch(e){ret.set_int(0);} 
+	}
+	
+	exps.PictureUrl = function(ret,i){ 
+		try{
+			if(typeof i === 'undefined' ){i=0;}
+			ret.set_string(window['appmobiPictureList'][i]);
+		}catch(e){ret.set_string(''); console.log(e);}
+	}
 
 }());

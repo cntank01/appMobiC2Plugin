@@ -8,6 +8,7 @@ Available Actions
 
 Accelerometer
 -------------
+When using the accelerometer in your game, export using the phone browser instead of DirectCanvas.
 - Watch acceleration
 - Stop watching acceleration
 - Get current acceleration
@@ -38,6 +39,14 @@ Cache
 - Remove from media cache
 - Clear media cache
 
+Camera
+------
+- Take picture
+- Get picture list
+- Import picture
+- Delete picture
+- Clear pictures
+
 Device
 ------
 - Hide Splash Screen
@@ -55,6 +64,7 @@ Device
 
 Geolocation
 -----------
+When using geolocation in your game, export using the phone browser instead of DirectCanvas.
 - Watch position
 - Stop watching position
 - Get current position
@@ -105,7 +115,9 @@ Triggers
 - On Push Sent Success
 - On Push Sent Fail
 - Friend User Id Not Found
-
+- Picture taken
+- Picture list loaded
+- File uploaded
 
 Available Expressions
 =====================
@@ -120,6 +132,11 @@ Cache
 -----
 - Cookie
 - MediaCache
+
+Camera
+------
+- Picture list count
+- Picture url
 
 Device
 ------

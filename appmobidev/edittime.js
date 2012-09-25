@@ -1,13 +1,13 @@
 ﻿function GetPluginSettings()
 {
 	return {
-		"name":			"appMobi",			// as appears in 'insert object' dialog, can be changed as long as "id" stays the same
-		"id":			"appMobi",			// this is used to identify this plugin and is saved to the project; never change it
+		"name":			"appMobiDev",			// as appears in 'insert object' dialog, can be changed as long as "id" stays the same
+		"id":			"appMobiDev",			// this is used to identify this plugin and is saved to the project; never change it
 		"version":		"1.0",					// (float in x.y format) Plugin version - C2 shows compatibility warnings based on this
 		"description":	"Integrate your game with appMobi.",
-		"author":		"ken@appMobi.com",
+		"author":		"ken@appMobi.com  -  Tap on the C2 forums",
 		"help url":		"http://www.scirra.com/manual/138/appmobi",
-		"category":		"Web",				// Prefer to re-use existing categories, but you can set anything here
+		"category":		"Platform specific",				// Prefer to re-use existing categories, but you can set anything here
 		"type":			"object",				// either "world" (appears in layout and is drawn), else "object"
 		"rotatable":	false,					// only used when "type" is "world".  Enables an angle property on the object.
 		"flags":		pf_singleglobal						// uncomment lines to enable flags...
@@ -94,6 +94,11 @@ AddCondition(16, cf_trigger, "Friend user id not found", "Triggers", "Friend use
 AddCondition(17, cf_trigger, "On audio end", "Triggers", "On audio end", "This event will fire once an audio file is complete.", "OnAudioStop");
 AddCondition(18, cf_trigger, "Geolocation updated", "Triggers", "Geolocation updated", "This event will fire once every interval set via the 'timeout' parameter.", "OnGeoLocationReceived");
 AddCondition(19, cf_trigger, "Accelerometer updated", "Triggers", "Accelerometer updated", "This event will fire once every interval set via the 'frequency' parameter.", "OnAccellReceived");
+
+AddCondition(20, cf_trigger, "File uploaded", "Triggers", "File uploaded", "Fired when a file has been uploaded to your server.", "OnFileUploaded");
+AddCondition(21, cf_trigger, "Picture taken", "Triggers", "Picture taken", "A picture was taken with the device camera.", "OnPictureSuccess");
+
+AddCondition(22, cf_trigger, "Picture list loaded", "Triggers", "Picture list loaded", "Can be accessed via the 'PictureUrl' expression.", "OnPictureListLoaded");
 
 
 ////////////////////////////////////////
@@ -300,7 +305,26 @@ AddAction(44, 0, "Watch acceleration", "Accelerometer", "Watch acceleration", "h
 AddAction(45, 0, "Stop watching acceleration", "Accelerometer", "Stop watching acceleration", "This method stops the process started by Watch Acceleration.", "accelStop");
 AddAction(46, 0, "Get current acceleration", "Accelerometer", "Get current acceleration", "Use this to get the current location of the device.", "accelGet");
 
+/*********************************************************	
+	Camera
+*********************************************************/
+AddNumberParam('Image quality', 'This parameter must be a value between 1 and 100.', 70);
+AddComboParamOption('Yes');
+AddComboParamOption('No');
+AddComboParam('Save to device library', ' This parameter controls whether the photo is saved directly to the device\'s image library or not.', 1);
+AddStringParam('Upload Server', 'Optional URL to upload the image to. If not set, the photo will still be saved in the app\'s library.', '');
+AddAction(47, 0, "Take picture", "Camera", "Take picture", "Take a picture with your device's camera and uploads it to your server.", "cameraTake");
 
+AddAction(48, 0, "Get picture list", "Camera", "Get picture list", "This command will return a list of all pictures stored in the APPLICATION'S picture list.", "cameraGetPictureList");
+
+AddStringParam('File name', 'The filename of the image in the picture list. This filename can be obtained from get picture list', '');
+AddAction(49, 0, "Delete picture", "Camera", "Delete picture", "This command will return a list of all pictures stored in the APPLICATION'S picture list.", "cameraDeletePicture");
+
+AddAction(50, 0, "Clear pictures", "Camera", "Clear pictures", "This command will remove all photos from your application's picture list.", "cameraClearPictures");
+
+AddAction(51, 0, "Import picture", "Camera", "Import picture", "This method will move a photo from your application's native camera file service (e.g. the camera roll) to the picture list.", "cameraImportPicture");
+
+//
 
 ////////////////////////////////////////
 // Expressions
@@ -359,6 +383,9 @@ AddExpression(22, ef_return_number, "Longitude", "Geolocation", "GeolocationLong
 AddExpression(23, ef_return_number, "X", "Accelerometer", "AccelerationX", "Contains  the current Longitude");
 AddExpression(24, ef_return_number, "Y", "Accelerometer", "AccelerationY", "Contains  the current Longitude");
 AddExpression(25, ef_return_number, "Z", "Accelerometer", "AccelerationZ", "Contains  the current Longitude");
+
+AddExpression(26, ef_return_number, "Picture list count", "Camera", "PictureListCount", "Contains number of pictures in the applications picture list.");
+AddExpression(27, ef_return_string | ef_variadic_parameters, "Picture url", "Camera", "PictureUrl", "Returns the local url list.");
 
 
 ////////////////////////////////////////

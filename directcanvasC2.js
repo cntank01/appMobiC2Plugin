@@ -49,6 +49,29 @@ document.addEventListener("appMobi.device.remote.data", function(evt){
 		}
 	} catch(e){}
 },false);
+
+document.addEventListener("appMobi.camera.picture.add",function(evt){
+	try{
+		if (evt.success == true){ 
+			AppMobi.canvas.execute("window['amevPictureSuccess']();");
+			if(window['appMobiFileUploadURL'].length>0){
+				pictureURL=AppMobi['camera']['getPictureURL'](evt.filename);
+				AppMobi['file']['uploadToServer'](pictureURL,window['appMobiFileUploadURL'], "", "image/jpeg", "");
+			}
+		}
+	}catch(e){}
+
+},false); 
+
+document.addEventListener("appMobi.file.upload",function(evt){ 
+	try{
+		if(evt.success){
+			AppMobi.canvas.execute("window['amevFileUploaded']()"); 
+		}
+	}
+},false);
+
+
 /****************************************************************
 	ACTIONS
 ****************************************************************/
@@ -118,4 +141,5 @@ function wvGeoProcessLocationFail(p){}
 function wvAccelSuccess(p){
 	AppMobi.canvas.execute("window['amevAccelProcess']('"+p.x+"','"+p.y+"','"+p.z+"');");
 }
+
 function wvAccelFail(p){}
