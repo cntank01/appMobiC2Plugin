@@ -68,7 +68,7 @@ document.addEventListener("appMobi.file.upload",function(evt){
 		if(evt.success){
 			AppMobi.canvas.execute("window['amevFileUploaded']()"); 
 		}
-	}
+	}catch(e){}
 },false);
 
 
