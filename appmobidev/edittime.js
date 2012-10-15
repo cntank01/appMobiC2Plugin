@@ -159,8 +159,6 @@ AddNumberParam('Close icon Y (portrait)', 'The position of the button to close t
 AddNumberParam('Close icon X (landscape)', 'The position of the button to close the web view from the left edge in pixels when the device is in the Landscape orientation.');
 AddNumberParam('Close icon Y (landscape)', 'The position of the button to close the web view from the top edge in pixels when the device is in the Landscape orientation.');
 AddAction(10, 0, "Show remote site", "Device", "Show remote site {0} (close icon {1}x{2} at ({3}, {4}) in portrait, ({5}, {6}) in landscape)", "Show a remote web site in a new web view. Touching the close icon will shut down the web view and return the user to the application. ", "deviceShowRemoteSite");
-
-
 	
 /*********************************************************	
 	ANALYTICS
@@ -324,7 +322,6 @@ AddAction(50, 0, "Clear pictures", "Camera", "Clear pictures", "This command wil
 
 AddAction(51, 0, "Import picture", "Camera", "Import picture", "This method will move a photo from your application's native camera file service (e.g. the camera roll) to the picture list.", "cameraImportPicture");
 
-//
 
 ////////////////////////////////////////
 // Expressions

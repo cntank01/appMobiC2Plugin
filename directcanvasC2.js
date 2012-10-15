@@ -1,9 +1,42 @@
+
+/****************************************************************
+	GRAB SOME VARIABLES ON STARTUP
+****************************************************************/
+ window['dcGetDeviceInfo']=function(){
+	hasCaching=AppMobi['device']['hasCaching'];
+	AppMobi.canvas.execute("window['dcDeviceHasCaching']('"+hasCaching+"');");	
+	
+	hasPush=AppMobi['device']['hasPush'];
+	AppMobi.canvas.execute("window['dcDeviceHasPush']('"+hasPush+"');");	
+	
+	hasStreaming=AppMobi['device']['hasStreaming'];
+	AppMobi.canvas.execute("window['dcDeviceHasStreaming']('"+hasStreaming+"');");	
+	
+	hasUpdates=AppMobi['device']['hasUpdates'];
+	AppMobi.canvas.execute("window['dcDeviceHasUpdates']('"+hasUpdates+"');");	
+	
+	orientation=AppMobi['device']['orientation'];
+	AppMobi.canvas.execute("window['dcDeviceOrientation']('"+orientation+"');");	
+	
+	initialOrientation=AppMobi['device']['initialOrientation'];
+	AppMobi.canvas.execute("window['dcDeviceInitialOrientation']('"+initialOrientation+"');");	
+
+}
+
 /****************************************************************
 	EVENTS
 ****************************************************************/
 document.addEventListener("appMobi.notification.push.enable", function(evt){
 	if(evt.success){			
 		AppMobi.canvas.execute("window['dcNotificationEnabled']();");				
+	}
+}, false);
+
+document.addEventListener("appMobi.device.barcode.scan", function(evt){
+	if(evt.success){			
+		var str=evt.codedata;
+		str.replace("'","\'");
+		AppMobi.canvas.execute("window['dcBarcodeScanned']('"+str+"');");				
 	}
 }, false);
 

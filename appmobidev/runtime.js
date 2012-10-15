@@ -48,6 +48,13 @@ cr.plugins_.appMobiDev = function(runtime)
 	var evtGeoLat=0;
 	var evtGeoLong=0;
 	
+	var deviceHasCaching=false;
+	var deviceHasPush=false;
+	var deviceHasStreaming=false;
+	var deviceHasUpdates=false;
+	var deviceOrientation=0;
+	var deviceInitialOrientation=0;
+	
 	var evtAccelX=0;
 	var evtAccelY=0;
 	var evtAccelZ=0;
@@ -267,11 +274,21 @@ cr.plugins_.appMobiDev = function(runtime)
 			document.addEventListener("appMobi.camera.picture.add", amev.pictureSuccess, false);
 			document.addEventListener("appMobi.file.upload",amev.uploadComplete,false);
 		}
+		
+		if(isDC){ awex("window['dcGetDeviceInfo']();"); }
+		
 	};
 	
 	instanceProto.onLayoutChange = function ()
 	{
 	};
+	
+	window['dcDeviceHasCaching']=function (v){ if(v=='true'){ deviceHasCaching=true; }else{ deviceHasCaching=false; } }
+	window['dcDeviceHasPush']=function (v){ if(v=='true'){ deviceHasPush=true; }else{ deviceHasPush=false; } }
+	window['dcDeviceHasStreaming']=function (v){ if(v=='true'){ deviceHasStreaming=true; }else{ deviceHasStreaming=false; } }
+	window['dcDeviceHasUpdates']=function (v){ if(v=='true'){ deviceHasUpdates=true; }else{ deviceHasUpdates=false; } }
+	window['dcDeviceOrientation']=function (v){ deviceOrientation=v; }
+	window['dcDeviceInitialOrientation']=function (v){ deviceInitialOrientation=v; }
 	
 	window['dcNotificationEnabled']=function(){
 		try{
@@ -356,9 +373,17 @@ cr.plugins_.appMobiDev = function(runtime)
 			aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnFileUploaded, aMInst);
 		}catch(e){}
 	}
+	
 	window['amevPictureSuccess']=function(){
 		try{
 			aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnPictureSuccess, aMInst);
+		}catch(e){}
+	}
+	
+	window['dcBarcodeScanned']=function(s){
+		try{
+			evtBarCodeResponse=s;
+			aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnBarcodeScanned, aMInst);
 		}catch(e){}
 	}
 	
@@ -367,6 +392,7 @@ cr.plugins_.appMobiDev = function(runtime)
 	window['appMobiCameraFile']='';
 	window['appMobiFileUploadURL']='';
 	
+
 	//////////////////////////////////////
 	// Conditions
 	pluginProto.cnds = {};
@@ -377,34 +403,49 @@ cr.plugins_.appMobiDev = function(runtime)
 	*********************************************************/	
 	cnds.deviceHasCaching = function ()
 	{
-		if (!appMobiEnabled || isDC)
+		if (!appMobiEnabled)
 			return false;
 		
-		return aMObj['device']['hasCaching'];
+		if(isDV){
+			return deviceHasCaching;
+		}else{
+			return aMObj['device']['hasCaching'];
+		}
 	};
 	
 	cnds.deviceHasPush = function ()
 	{
-		if (!appMobiEnabled || isDC)
+		if (!appMobiEnabled)
 			return false;
-			
-		return aMObj['device']['hasPush'];
+		
+		if(!isDC){		
+			return aMObj['device']['hasPush'];
+		}else{
+			return deviceHasPush;
+		}
 	};
 	
 	cnds.deviceHasStreaming = function ()
 	{
-		if (!appMobiEnabled || isDC)
+		if (!appMobiEnabled)
 			return false;
-			
-		return aMObj['device']['hasStreaming'];
+		
+		if(!isDC){		
+			return aMObj['device']['hasStreaming'];
+		}else{
+			return deviceHasStreaming;
+		}
 	};
 	
 	cnds.deviceHasUpdates = function ()
 	{
-		if (!appMobiEnabled || isDC)
+		if (!appMobiEnabled)
 			return false;
-			
-		return aMObj['device']['hasUpdates'];
+		if(!isDC){
+			return aMObj['device']['hasUpdates'];
+		}else{
+			return deviceHasUpdates;
+		}
 	};
 	
 	cnds.isInAppMobi = function ()
@@ -416,18 +457,26 @@ cr.plugins_.appMobiDev = function(runtime)
 	
 	cnds.compareOrientation = function (o)
 	{
-		if (!appMobiEnabled || isDC)
+		if (!appMobiEnabled)
 			return (o === 0);	// assume portrait when not in appMobi
 			
-		return orients_array[o] === parseInt(aMObj['device']['orientation']);
+		if(!isDC){
+			return orients_array[o] === parseInt(aMObj['device']['orientation']);
+		}else{
+			return deviceOrientation;
+		}
 	};
 	
 	cnds.compareInitialOrientation = function (o)
 	{
-		if (!appMobiEnabled || isDC)
+		if (!appMobiEnabled)
 			return (o === 0);	// assume was in portrait when not in appMobi
-			
-		return orients_array[o] === parseInt(aMObj['device']['initialOrientation']);
+		
+		if(!isDC){
+			return orients_array[o] === parseInt(aMObj['device']['initialOrientation']);
+		}else{
+			return deviceInitialOrientation;
+		}
 	};
 	
 	cnds.OnBarcodeScanned = function ()
@@ -499,6 +548,18 @@ cr.plugins_.appMobiDev = function(runtime)
 	{
 		return true;
 	};
+	
+	
+	cnds.OnPaymentSuccess = function ()
+	{
+		return true;
+	};
+
+	cnds.OnPaymentCancel = function ()
+	{
+		return true;
+	};
+	
 	
 	////////////////////////////////////// 
 	// Actions
@@ -590,12 +651,13 @@ cr.plugins_.appMobiDev = function(runtime)
 	
 	acts.deviceScanBarcode = function ()
 	{
-		if (isDC)
-			return;
-			
-		try {
-			evtBarCodeResponse=''; aMObj['device']['scanBarcode']();
-		} catch(e) { console.log('Barcode Error',e);}
+		if (isDC){
+			awex("AppMobi['device']['scanBarcode']();");
+		}else{	
+			try {
+				evtBarCodeResponse=''; aMObj['device']['scanBarcode']();
+			} catch(e) { console.log('Barcode Error',e);}
+		}
 	};
 	
 	acts.deviceUpdateConnection = function ()
@@ -610,11 +672,12 @@ cr.plugins_.appMobiDev = function(runtime)
 	
 	acts.deviceShowRemoteSite = function (url, w, h, px, py, lx, ly)
 	{
-		if (isDC)
-			return;
-			
 		try {
-			evtRemoteStatus='open'; aMObj['device']['showRemoteSiteExt'](url, px, py, lx, ly, w, h);
+			if (isDC){
+				awex("AppMobi['device']['showRemoteSiteExt']('"+url+"',"+px+","+py+", "+lx+", "+ly+", "+w+", "+h+");");
+			}else{
+					evtRemoteStatus='open'; aMObj['device']['showRemoteSiteExt'](url, px, py, lx, ly, w, h);
+			}
 		} catch(e) {}
 	};
 	
@@ -985,8 +1048,7 @@ cr.plugins_.appMobiDev = function(runtime)
 	acts.cacheAddToMediaCache=function(url)
 	{
 		if (isDC)
-			return;
-			
+			awex("AppMobi['cache']['addToMediaCache']('"+url+"');");
 		try{ 
 			aMObj['cache']['addToMediaCache'](url); 
 		}catch(e){ console.log(e); }
@@ -995,8 +1057,7 @@ cr.plugins_.appMobiDev = function(runtime)
 	acts.cacheClearAllCookies=function()
 	{
 		if (isDC)
-			return;
-			
+			awex("AppMobi['cache']['clearAllCookies']();");
 		try{ 
 			aMObj['cache']['clearAllCookies'](); 
 		}catch(e){ console.log(e); }
@@ -1005,8 +1066,7 @@ cr.plugins_.appMobiDev = function(runtime)
 	acts.cacheClearMediaCache=function()
 	{
 		if (isDC)
-			return;
-			
+			awex("AppMobi['cache']['clearMediaCache']();");
 		try{ 
 			aMObj['cache']['clearMediaCache'](); 
 		}catch(e){ console.log(e); }
@@ -1015,8 +1075,7 @@ cr.plugins_.appMobiDev = function(runtime)
 	acts.cacheRemoveCookie=function(v)
 	{
 		if (isDC)
-			return;
-			
+			awex("AppMobi['cache']['removeCookie']('"+v+"');");
 		try{ 
 			aMObj['cache']['removeCookie'](v); 
 		}catch(e){ console.log(e); }
@@ -1025,8 +1084,7 @@ cr.plugins_.appMobiDev = function(runtime)
 	acts.cacheRemoveFromMediaCache=function(v)
 	{
 		if (isDC)
-			return;
-			
+			awex("AppMobi['cache']['removeFromMediaCache']('"+v+"');");
 		try{ 
 			aMObj['cache']['removeFromMediaCache'](v); 
 		}catch(e){ console.log(e); }
@@ -1035,8 +1093,7 @@ cr.plugins_.appMobiDev = function(runtime)
 	acts.cacheSetCookie=function(name, value, expires)
 	{
 		if (isDC)
-			return;
-			
+			awex("AppMobi['cache']['setCookie']('"+name+"','"+value+"','"+expires+"');");
 		try{ 
 			aMObj['cache']['setCookie'](name, value, expires); 
 		}catch(e){ console.log(e); }
@@ -1222,6 +1279,8 @@ cr.plugins_.appMobiDev = function(runtime)
 			
 		}catch(e){}
 	};
+	
+	
 	
 	//////////////////////////////////////
 	// Expressions
