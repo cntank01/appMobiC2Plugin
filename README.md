@@ -137,6 +137,7 @@ Camera
 ------
 - Picture list count
 - Picture url
+- Current picture url
 
 Device
 ------

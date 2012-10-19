@@ -37,6 +37,7 @@ cr.plugins_.appMobiDev = function(runtime)
 	var aMObj={};
 	var evtRemoteDataResponse='';
 	var evtBarCodeResponse='';
+	var evtCameraImageURL='';
 	var evtConnection='';
 	var evtRemoteStatus='idle';
 	var accelerometer={x:0,y:0,z:0};
@@ -374,8 +375,9 @@ cr.plugins_.appMobiDev = function(runtime)
 		}catch(e){}
 	}
 	
-	window['amevPictureSuccess']=function(){
+	window['amevPictureSuccess']=function(img){
 		try{
+			evtCameraImageURL=img;
 			aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnPictureSuccess, aMInst);
 		}catch(e){}
 	}
@@ -807,6 +809,7 @@ cr.plugins_.appMobiDev = function(runtime)
 			if(quality<0 || quality>100){quality=70;}
 			
 			window['appMobiFileUploadURL']=uploadUrl;
+			awex("window['appMobiFileUploadURL']='"+uploadUrl+"';");
 			
 			if (isDC){
 				awex("AppMobi['camera']['takePicture']("+quality+","+saveToLibrary+",'"+ext+"');");
@@ -1405,6 +1408,10 @@ cr.plugins_.appMobiDev = function(runtime)
 			if(typeof i === 'undefined' ){i=0;}
 			ret.set_string(window['appmobiPictureList'][i]);
 		}catch(e){ret.set_string(''); console.log(e);}
+	}
+	
+	exps.CurrentPictureUrl=function(ret){
+		ret.set_string(evtCameraImageURL);
 	}
 
 }());

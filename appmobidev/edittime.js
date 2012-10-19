@@ -101,6 +101,7 @@ AddCondition(21, cf_trigger, "Picture taken", "Triggers", "Picture taken", "A pi
 AddCondition(22, cf_trigger, "Picture list loaded", "Triggers", "Picture list loaded", "Can be accessed via the 'PictureUrl' expression.", "OnPictureListLoaded");
 
 
+
 ////////////////////////////////////////
 // Actions
 
@@ -383,6 +384,7 @@ AddExpression(25, ef_return_number, "Z", "Accelerometer", "AccelerationZ", "Cont
 
 AddExpression(26, ef_return_number, "Picture list count", "Camera", "PictureListCount", "Contains number of pictures in the applications picture list.");
 AddExpression(27, ef_return_string | ef_variadic_parameters, "Picture url", "Camera", "PictureUrl", "Returns the local url list.");
+AddExpression(28, ef_return_string, "Current Picture url", "Camera", "CurrentPictureUrl", "Returns the local url of the picture just taken with the camera.");
 
 
 ////////////////////////////////////////

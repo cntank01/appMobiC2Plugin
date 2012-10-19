@@ -1,3 +1,4 @@
+window['appMobiFileUploadURL']='';
 
 /****************************************************************
 	GRAB SOME VARIABLES ON STARTUP
@@ -84,15 +85,15 @@ document.addEventListener("appMobi.device.remote.data", function(evt){
 },false);
 
 document.addEventListener("appMobi.camera.picture.add",function(evt){
-	try{
+	try{		
 		if (evt.success == true){ 
-			AppMobi.canvas.execute("window['amevPictureSuccess']();");
-			if(window['appMobiFileUploadURL'].length>0){
-				pictureURL=AppMobi['camera']['getPictureURL'](evt.filename);
+			pictureURL=AppMobi['camera']['getPictureURL'](evt.filename);		
+			AppMobi.canvas.execute("window['amevPictureSuccess']('"+pictureURL+"');");
+			if(window['appMobiFileUploadURL']!=''){				
 				AppMobi['file']['uploadToServer'](pictureURL,window['appMobiFileUploadURL'], "", "image/jpeg", "");
 			}
 		}
-	}catch(e){}
+	}catch(e){console.log('camera oops',e);}
 
 },false); 
 
