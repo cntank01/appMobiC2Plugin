@@ -196,17 +196,15 @@ cr.plugins_.appMobiDev = function(runtime)
 	};
 	
 	amev.pictureSuccess=function(evt){		
-		window['appMobiCameraFile']='';
 		try{
-			if (evt.success == true){ 
-				window['appMobiCameraFile']=evt.filename;
-				if(window['appMobiFileUploadURL'].length>0){
-					pictureURL=aMObj['device']['camera']['getPictureURL'](evt.filename);
-					aMObj['file']['uploadToServer'](pictureURL,window['appMobiFileUploadURL'], "", "image/jpeg", "");
+			if (evt.success == true){ 			
+				evtCameraImageURL=aMObj['camera']['getPictureURL'](evt.filename);				
+				if(window['appMobiFileUploadURL'].length>0){					
+					aMObj['file']['uploadToServer'](evtCameraImageURL,window['appMobiFileUploadURL'], "", "image/jpeg", "");
 				}
 				aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnPictureSuccess, aMInst);
 			}
-		}catch(e){}
+		}catch(e){console.log('pictureSuccess',e);}
 	};
 	
 	amev.uploadComplete=function(evt){		
@@ -391,7 +389,6 @@ cr.plugins_.appMobiDev = function(runtime)
 	
 	window['accelWatchTimer']={};
 	
-	window['appMobiCameraFile']='';
 	window['appMobiFileUploadURL']='';
 	
 
@@ -542,7 +539,7 @@ cr.plugins_.appMobiDev = function(runtime)
 	};
 	
 	cnds.OnPictureSuccess = function ()
-	{
+	{ console.log('picture taken');
 		return true;
 	};
 	
@@ -808,16 +805,15 @@ cr.plugins_.appMobiDev = function(runtime)
 			if(save==0){saveToLibrary=true;}
 			if(quality<0 || quality>100){quality=70;}
 			
-			window['appMobiFileUploadURL']=uploadUrl;
-			awex("window['appMobiFileUploadURL']='"+uploadUrl+"';");
-			
 			if (isDC){
+				awex("window['appMobiFileUploadURL']='"+uploadUrl+"';");
 				awex("AppMobi['camera']['takePicture']("+quality+","+saveToLibrary+",'"+ext+"');");
 			}else{
+				window['appMobiFileUploadURL']=uploadUrl;
 				aMObj['camera']['takePicture'](quality,saveToLibrary,ext);
 			}
 			
-		} catch(e) {console.log(e);}
+		} catch(e) {console.log('Take Picture Error',e);}
 	};
 	
 	acts.cameraGetPictureList=function(){
