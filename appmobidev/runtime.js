@@ -35,6 +35,7 @@ cr.plugins_.appMobiDev = function(runtime)
 	
 	var appMobiEnabled=false;
 	var aMObj={};
+	var otObj={};
 	var evtRemoteDataResponse='';
 	var evtBarCodeResponse='';
 	var evtCameraImageURL='';
@@ -237,6 +238,12 @@ cr.plugins_.appMobiDev = function(runtime)
 		evtAccelZ=0;
 	};
 	
+	amev.otFinishPayment=function(d){	
+		aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnPaymentSuccess, aMInst);
+	}
+	amev.otCancelPayment=function(d){
+		aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnPaymentCancel, aMInst);
+	}
 	
 	var instanceProto = pluginProto.Instance.prototype;
 
@@ -252,6 +259,7 @@ cr.plugins_.appMobiDev = function(runtime)
 		if (typeof window["AppMobi"] !== "undefined" && !isDC)
 		{
 			aMObj = window["AppMobi"];
+			otObj = window["OneTouch"];
 			appMobiEnabled = true;
 			
 			document.addEventListener("appMobi.device.remote.data", amev.getRemoteDataEvent,false);
@@ -391,6 +399,9 @@ cr.plugins_.appMobiDev = function(runtime)
 	
 	window['appMobiFileUploadURL']='';
 	
+	window['dcPurchaseSuccess']=function(){ amev.otFinishPayment();}
+	
+	window['dcPurchaseCanceled']=function(){ amev.otCancelPayment(); }
 
 	//////////////////////////////////////
 	// Conditions
@@ -1280,6 +1291,21 @@ cr.plugins_.appMobiDev = function(runtime)
 	};
 	
 	
+	/*********************************************************	
+		1TOUCH
+	*********************************************************/
+	acts.oneTouchPurchase=function(merchId, sku, qty){
+		if(merchId=='' || sku=='' || qty<1){ return false; }
+	
+		if(isDC){
+			awex("oneTouchPurchase('"+merchId+"','"+sku+"','"+qty+"')");
+		}else{		
+			otObj['merchant_id'] = merchId;  //Name supplied in Merchant Account	
+			otObj['successCallback'] = function () { amev.otFinishPayment(); }    
+			otObj['cancelCallback'] = function () { amev.otCancelPayment(); }  
+			otObj['buy'](sku,qty,amev.otFinishPayment);  
+		}
+	}
 	
 	//////////////////////////////////////
 	// Expressions

@@ -100,7 +100,8 @@ AddCondition(21, cf_trigger, "Picture taken", "Triggers", "Picture taken", "A pi
 
 AddCondition(22, cf_trigger, "Picture list loaded", "Triggers", "Picture list loaded", "Can be accessed via the 'PictureUrl' expression.", "OnPictureListLoaded");
 
-
+AddCondition(23, cf_trigger, "Payment Success", "Triggers", "Payment Success", "Fired when a 1Touch payment is completed.", "OnPaymentSuccess");
+AddCondition(24, cf_trigger, "Payment Canceled", "Triggers", "Payment Canceled", "Fired when a 1Touch payment is canceled by the user.", "OnPaymentCancel");
 
 ////////////////////////////////////////
 // Actions
@@ -323,6 +324,14 @@ AddAction(50, 0, "Clear pictures", "Camera", "Clear pictures", "This command wil
 
 AddAction(51, 0, "Import picture", "Camera", "Import picture", "This method will move a photo from your application's native camera file service (e.g. the camera roll) to the picture list.", "cameraImportPicture");
 
+
+/*********************************************************	
+	1Touch
+*********************************************************/
+AddStringParam('Merchant Account', 'The Merchant Account name you set in the appMobi appHub.', '');
+AddStringParam('Product Id', 'The Product Id you set in the appMobi appHub.', '');
+AddNumberParam('Quantity', 'Number of items being purchased.', 1);
+AddAction(52, 0, "Purchase", "1Touch", "Purchase", "Initiate a purchase for the user.", "oneTouchPurchase");
 
 ////////////////////////////////////////
 // Expressions

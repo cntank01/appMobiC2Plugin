@@ -24,6 +24,9 @@ window['appMobiFileUploadURL']='';
 
 }
 
+
+
+
 /****************************************************************
 	EVENTS
 ****************************************************************/
@@ -177,3 +180,14 @@ function wvAccelSuccess(p){
 }
 
 function wvAccelFail(p){}
+
+function oneTouchPurchase(merchId, sku, qty){
+	OneTouch.merchant_id = merchId;  //Name supplied in Merchant Account	
+	OneTouch.successCallback = function () { oneTouchSuccessCallback(); }    
+	OneTouch.cancelCallback = function () { oneTouchCancelCallback(); }  
+	OneTouch.buy(sku, qty, oneTouchSuccessCallback);  
+}
+
+function oneTouchSuccessCallback(d){ AppMobi.canvas.execute("window['dcPurchaseSuccess']();"); }
+
+function oneTouchCancelCallback(){ AppMobi.canvas.execute("window['dcPurchaseCanceled']();"); }
