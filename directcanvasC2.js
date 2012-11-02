@@ -90,7 +90,13 @@ document.addEventListener("appMobi.device.remote.data", function(evt){
 document.addEventListener("appMobi.camera.picture.add",function(evt){
 	try{		
 		if (evt.success == true){ 
-			pictureURL=AppMobi['camera']['getPictureURL'](evt.filename);		
+			
+			if(AppMobi['isxdk']){
+				pictureURL=AppMobi['camera']['getPictureURL'](evt.filename);		
+			}else{
+				pictureURL='_pictures/'+evt.filename;
+			}
+			
 			AppMobi.canvas.execute("window['amevPictureSuccess']('"+pictureURL+"');");
 			if(window['appMobiFileUploadURL']!=''){				
 				AppMobi['file']['uploadToServer'](pictureURL,window['appMobiFileUploadURL'], "", "image/jpeg", "");
