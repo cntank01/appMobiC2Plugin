@@ -1307,6 +1307,16 @@ cr.plugins_.appMobiDev = function(runtime)
 		}
 	}
 	
+	
+	acts.hideStatusBar = function ()
+	{
+		try {
+			if (isDC)
+				awex("AppMobi['device']['hideStatusBar']();");
+			else
+				appMobiObj['device']['hideStatusBar']();
+		} catch(e) {}
+	};
 	//////////////////////////////////////
 	// Expressions
 	pluginProto.exps = {};

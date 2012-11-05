@@ -333,6 +333,9 @@ AddStringParam('Product Id', 'The Product Id you set in the appMobi appHub.', ''
 AddNumberParam('Quantity', 'Number of items being purchased.', 1);
 AddAction(52, 0, "Purchase", "1Touch", "Purchase", "Initiate a purchase for the user.", "oneTouchPurchase");
 
+
+
+AddAction(53, 0, "Hide status bar", "Device", "Hide status bar", "Hide the status bar at the top of the device screen, if any is present.", "hideStatusBar");
 ////////////////////////////////////////
 // Expressions
 
