@@ -21,11 +21,21 @@ window['appMobiFileUploadURL']='';
 	
 	initialOrientation=AppMobi['device']['initialOrientation'];
 	AppMobi.canvas.execute("window['dcDeviceInitialOrientation']('"+initialOrientation+"');");	
-
+	
+	window['refreshDCCookies']();	
 }
 
 
-
+window['refreshDCCookies']=function(){
+	var cookiesArray = AppMobi.cache.getCookieList();
+	var cookieValue='';
+	AppMobi.canvas.execute("dcCookies=[];");
+	for (var x=0;x<cookiesArray.length;x++){
+		cookieValue=AppMobi.cache.getCookie(cookiesArray[x]);
+		cookieValue.replace("'","\'");
+		AppMobi.canvas.execute("window['dcCacheGetCookies']('"+cookiesArray[x]+"','"+cookieValue+"');");
+	}
+}
 
 /****************************************************************
 	EVENTS

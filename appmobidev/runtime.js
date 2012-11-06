@@ -62,7 +62,8 @@ cr.plugins_.appMobiDev = function(runtime)
 	var evtAccelZ=0;
 	// for executing in webview in DC mode
 	var awex = null;
-	
+		
+	var dcCookies=[];	
 	
 	/////////////////////////////////////
 	// Instance class
@@ -255,10 +256,10 @@ cr.plugins_.appMobiDev = function(runtime)
 		isDC = this.runtime.isDirectCanvas;
 		
 		if (isDC){awex = AppMobi["webview"]["execute"]; }
-		
+		aMObj = window["AppMobi"];
 		if (typeof window["AppMobi"] !== "undefined" && !isDC)
 		{
-			aMObj = window["AppMobi"];
+			
 			otObj = window["OneTouch"];
 			appMobiEnabled = true;
 			
@@ -403,6 +404,10 @@ cr.plugins_.appMobiDev = function(runtime)
 	
 	window['dcPurchaseCanceled']=function(){ amev.otCancelPayment(); }
 
+	window['dcCacheGetCookies']=function(k,v){
+		dcCookies.push({'key':k,'value':v});
+	}
+	
 	//////////////////////////////////////
 	// Conditions
 	pluginProto.cnds = {};
@@ -1057,8 +1062,11 @@ cr.plugins_.appMobiDev = function(runtime)
 	*********************************************************/
 	acts.cacheAddToMediaCache=function(url)
 	{
-		if (isDC)
+		if (isDC){
 			awex("AppMobi['cache']['addToMediaCache']('"+url+"');");
+			return;
+		}
+		
 		try{ 
 			aMObj['cache']['addToMediaCache'](url); 
 		}catch(e){ console.log(e); }
@@ -1066,8 +1074,11 @@ cr.plugins_.appMobiDev = function(runtime)
 	
 	acts.cacheClearAllCookies=function()
 	{
-		if (isDC)
+		if (isDC){
 			awex("AppMobi['cache']['clearAllCookies']();");
+			dcCookies=[];
+			return;
+		}
 		try{ 
 			aMObj['cache']['clearAllCookies'](); 
 		}catch(e){ console.log(e); }
@@ -1075,8 +1086,10 @@ cr.plugins_.appMobiDev = function(runtime)
 	
 	acts.cacheClearMediaCache=function()
 	{
-		if (isDC)
+		if (isDC){
 			awex("AppMobi['cache']['clearMediaCache']();");
+			return;
+		}
 		try{ 
 			aMObj['cache']['clearMediaCache'](); 
 		}catch(e){ console.log(e); }
@@ -1084,8 +1097,11 @@ cr.plugins_.appMobiDev = function(runtime)
 	
 	acts.cacheRemoveCookie=function(v)
 	{
-		if (isDC)
+		if (isDC){
 			awex("AppMobi['cache']['removeCookie']('"+v+"');");
+			awex("window['refreshDCCookies']();");
+			return;
+		}
 		try{ 
 			aMObj['cache']['removeCookie'](v); 
 		}catch(e){ console.log(e); }
@@ -1093,8 +1109,10 @@ cr.plugins_.appMobiDev = function(runtime)
 	
 	acts.cacheRemoveFromMediaCache=function(v)
 	{
-		if (isDC)
+		if (isDC){
 			awex("AppMobi['cache']['removeFromMediaCache']('"+v+"');");
+			return;
+		}
 		try{ 
 			aMObj['cache']['removeFromMediaCache'](v); 
 		}catch(e){ console.log(e); }
@@ -1102,11 +1120,14 @@ cr.plugins_.appMobiDev = function(runtime)
 	
 	acts.cacheSetCookie=function(name, value, expires)
 	{
-		if (isDC)
+		if (isDC){
 			awex("AppMobi['cache']['setCookie']('"+name+"','"+value+"','"+expires+"');");
-		try{ 
-			aMObj['cache']['setCookie'](name, value, expires); 
-		}catch(e){ console.log(e); }
+			awex("window['refreshDCCookies']();");
+		}else{
+			try{ 
+				aMObj['cache']['setCookie'](name, value, expires); 
+			}catch(e){ console.log(e); }
+		}
 	}
 	
 	acts.AddVirtualPage = function ()
@@ -1415,7 +1436,16 @@ cr.plugins_.appMobiDev = function(runtime)
 	*********************************************************/
 	exps.Cookie = function(ret, p){ 
 		try{
-			ret.set_string(aMObj['cache']['getCookie'](p)); 
+			if(isDC){				
+				for(var ix=0; ix<dcCookies.length; ix++){
+					if(dcCookies[ix].key==p){
+						ret.set_string(dcCookies[ix].value);
+						break;
+					}
+				}				
+			}else{
+				ret.set_string(aMObj['cache']['getCookie'](p)); 
+			}
 		}catch(e){ ret.set_string(''); }
 	}
 	
