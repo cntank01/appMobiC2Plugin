@@ -125,6 +125,18 @@ document.addEventListener("appMobi.file.upload",function(evt){
 },false);
 
 
+document.addEventListener("appMobi.notification.confirm",function(evt){ 
+	try{
+		confirmed='false';
+		if(evt.success==true && evt.answer==true){
+			confirmed='true';
+		}
+		
+		AppMobi.canvas.execute("window['confirmModalResponse']('"+confirmed+"')"); 
+	}catch(e){}
+},false);
+
+
 /****************************************************************
 	ACTIONS
 ****************************************************************/

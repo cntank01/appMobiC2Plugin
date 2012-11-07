@@ -246,6 +246,15 @@ cr.plugins_.appMobiDev = function(runtime)
 		aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnPaymentCancel, aMInst);
 	}
 	
+	amev.confirmModalResponse=function(d){
+		if( d.success == true && d['answer'] == true ){
+			aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnConfirmationApproved, aMInst);
+		}else{
+			aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnConfirmationDeclined, aMInst);
+		}
+	
+	}
+	
 	var instanceProto = pluginProto.Instance.prototype;
 
 	// called whenever an instance is created
@@ -281,6 +290,8 @@ cr.plugins_.appMobiDev = function(runtime)
 			
 			document.addEventListener("appMobi.camera.picture.add", amev.pictureSuccess, false);
 			document.addEventListener("appMobi.file.upload",amev.uploadComplete,false);
+			
+			document.addEventListener("appMobi.notification.confirm",amev.confirmModalResponse,false);
 		}
 		
 		if(isDC){ awex("window['dcGetDeviceInfo']();"); }
@@ -404,8 +415,14 @@ cr.plugins_.appMobiDev = function(runtime)
 	
 	window['dcPurchaseCanceled']=function(){ amev.otCancelPayment(); }
 
-	window['dcCacheGetCookies']=function(k,v){
-		dcCookies.push({'key':k,'value':v});
+	window['dcCacheGetCookies']=function(k,v){ dcCookies.push({'key':k,'value':v}); }
+	
+	window['confirmModalResponse']=function(v){
+		if(v=='true'){
+			aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnConfirmationApproved, aMInst);
+		}else{
+			aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnConfirmationDeclined, aMInst);
+		}
 	}
 	
 	//////////////////////////////////////
@@ -574,6 +591,10 @@ cr.plugins_.appMobiDev = function(runtime)
 	{
 		return true;
 	};
+	
+	cnds.OnConfirmationApproved = function () { return true; };
+	
+	cnds.OnConfirmationDeclined = function () { return true; };
 	
 	
 	////////////////////////////////////// 
@@ -1057,6 +1078,25 @@ cr.plugins_.appMobiDev = function(runtime)
 	}
 	
 	
+	acts.confirmModal=function(title, msg, ok, cancel){
+		
+		if(title.length==0){ title='Please Confirm'; }
+		if(ok.length==0){ ok='Confirm'; }
+		if(cancel.length==0){ cancel='Cancel'; }
+		if(msg.length==0){ return; }
+		
+		if (isDC){
+			title.replace("'","\'");
+			msg.replace("'","\'");
+			ok.replace("'","\'");
+			cancel.replace("'","\'");
+			awex("AppMobi['notification']['confirm']('"+ msg +"','dcConfirmModalEvent','"+ title +"','"+ ok +"','"+ cancel +"');");
+			return;
+		}
+		
+		aMObj['notification']['confirm'](msg,'confirmationModalEvent',title,ok,cancel);
+	}
+	
 	/*********************************************************	
 		CACHE
 	*********************************************************/
@@ -1168,6 +1208,10 @@ cr.plugins_.appMobiDev = function(runtime)
 			aMObj['device']['sendSMS'](bodyText, toNumber);
 		}
 	};
+	
+	
+	
+	
 	
 	/*********************************************************	
 		AUDIO

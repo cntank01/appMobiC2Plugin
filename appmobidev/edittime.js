@@ -103,6 +103,9 @@ AddCondition(22, cf_trigger, "Picture list loaded", "Triggers", "Picture list lo
 AddCondition(23, cf_trigger, "Payment Success", "Triggers", "Payment Success", "Fired when a 1Touch payment is completed.", "OnPaymentSuccess");
 AddCondition(24, cf_trigger, "Payment Canceled", "Triggers", "Payment Canceled", "Fired when a 1Touch payment is canceled by the user.", "OnPaymentCancel");
 
+AddCondition(25, cf_trigger, "Confirmation Approved", "Triggers", "Confirmation Approved", "Fired when user approves the confirmation modal.", "OnConfirmationApproved");
+AddCondition(26, cf_trigger, "Confirmation Declined", "Triggers", "Confirmation Declined", "Fired when user declines the confirmation modal.", "OnConfirmationDeclined");
+
 ////////////////////////////////////////
 // Actions
 
@@ -333,9 +336,14 @@ AddStringParam('Product Id', 'The Product Id you set in the appMobi appHub.', ''
 AddNumberParam('Quantity', 'Number of items being purchased.', 1);
 AddAction(52, 0, "Purchase", "1Touch", "Purchase", "Initiate a purchase for the user.", "oneTouchPurchase");
 
-
-
 AddAction(53, 0, "Hide status bar", "Device", "Hide status bar", "Hide the status bar at the top of the device screen, if any is present.", "hideStatusBar");
+
+
+AddStringParam('Title', 'Modal title', '');
+AddStringParam('Message', 'Modal message', '');
+AddStringParam('Confirm text', 'Confirmation button text', '');
+AddStringParam('Dismiss text', 'Dismiss button text', '');
+AddAction(54, 0, "Confirmation Modal", "Device", "Confirmation Modal", "This method will display a modal alert box with confirmation options.", "confirmModal");
 ////////////////////////////////////////
 // Expressions
 
