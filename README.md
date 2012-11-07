@@ -61,6 +61,7 @@ Device
 - Set orientation
 - Update connection
 - Send SMS
+- Hide status bar
 
 Geolocation
 -----------
@@ -80,6 +81,7 @@ Notifications / Push Messaging
 - Find user
 - Show rich message
 - Send push notification
+- Confirmation modal
 
 Virtual Pages
 -------------
@@ -118,6 +120,8 @@ Triggers
 - Picture taken
 - Picture list loaded
 - File uploaded
+- Confirmation approved
+- Confirmation declined
 
 Available Expressions
 =====================
