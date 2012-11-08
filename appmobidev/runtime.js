@@ -83,10 +83,11 @@ cr.plugins_.appMobiDev = function(runtime)
 		try {
 			if(event.success)
 			{
+				
 				evtRemoteDataResponse=event.response;
 				aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnRemoteData, aMInst); //aMInst
 			}
-		} catch(e){}
+		} catch(e){ console.log('grdr error',e);}
 	};
 	
 	amev.barcodeScanned = function(evt)
@@ -613,12 +614,15 @@ cr.plugins_.appMobiDev = function(runtime)
 	};
 	acts.deviceGetRemoteData = function (method, url, body, id)
 	{
+		
+			
 		if (isDC){
 			try{
 				awex("GetRemoteData('"+ method +"','" + url +"','"+ body +"','"+ id +"');");
 			}catch(e){console.log(e);}
 		}else{	
 			try {
+				if(url.toLowerCase().indexOf('http')<0){ url=aMObj['webRoot']+url; }
 				evtRemoteDataResponse=''; 
 				var parameters = new aMObj['Device']['RemoteDataParameters']();
 				parameters.url = url;
@@ -723,7 +727,12 @@ cr.plugins_.appMobiDev = function(runtime)
 			return;
 			
 		if (isDC)
-			awex("AppMobi['device']['setAutoRotate'](" + (allow ? "true" : "false") + ");");
+			if(allow){
+				awex("deviceAutoRotate('yes');");
+			}else{
+				awex("deviceAutoRotate('no');");
+			}
+			
 		else
 			aMObj['device']['setAutoRotate'](allow !== 0);
 	};
