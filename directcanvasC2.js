@@ -136,6 +136,7 @@ document.addEventListener("appMobi.notification.confirm",function(evt){
 	}catch(e){}
 },false);
 
+document.addEventListener("appMobi.device.orientation.change", function(evt){ AppMobi.canvas.execute("window['dcDeviceOrientationChanged']()"); },false);
 
 /****************************************************************
 	ACTIONS
@@ -191,6 +192,7 @@ function dcNotificationSetUserAttributes(s){
 }
 
 function GetRemoteData(method,url,body,id){
+	if(url.toLowerCase().indexOf('http')<0){ url=AppMobi['webRoot']+url; }
 	AppMobi.device.getRemoteData(url, method, body, 'processRemoteData', 'processRemoteData');
 }
 
@@ -219,3 +221,11 @@ function oneTouchPurchase(merchId, sku, qty){
 function oneTouchSuccessCallback(d){ AppMobi.canvas.execute("window['dcPurchaseSuccess']();"); }
 
 function oneTouchCancelCallback(){ AppMobi.canvas.execute("window['dcPurchaseCanceled']();"); }
+
+function deviceAutoRotate(allow){ 
+	if(allow=='yes') { 
+		AppMobi.device.setAutoRotate(true); 
+	}else{ 
+		AppMobi.device.setAutoRotate(false); 
+	} 
+}

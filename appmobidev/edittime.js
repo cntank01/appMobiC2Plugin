@@ -106,6 +106,8 @@ AddCondition(24, cf_trigger, "Payment Canceled", "Triggers", "Payment Canceled",
 AddCondition(25, cf_trigger, "Confirmation Approved", "Triggers", "Confirmation Approved", "Fired when user approves the confirmation modal.", "OnConfirmationApproved");
 AddCondition(26, cf_trigger, "Confirmation Declined", "Triggers", "Confirmation Declined", "Fired when user declines the confirmation modal.", "OnConfirmationDeclined");
 
+AddCondition(27, cf_trigger, "Orientation Changed", "Triggers", "Orientation Changed", "Fired when the device changes orientation.", "OnOrientationChanged");
+
 ////////////////////////////////////////
 // Actions
 

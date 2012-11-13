@@ -243,6 +243,7 @@ cr.plugins_.appMobiDev = function(runtime)
 	amev.otFinishPayment=function(d){	
 		aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnPaymentSuccess, aMInst);
 	}
+	
 	amev.otCancelPayment=function(d){
 		aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnPaymentCancel, aMInst);
 	}
@@ -252,10 +253,9 @@ cr.plugins_.appMobiDev = function(runtime)
 			aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnConfirmationApproved, aMInst);
 		}else{
 			aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnConfirmationDeclined, aMInst);
-		}
-	
+		}	
 	}
-	
+		
 	var instanceProto = pluginProto.Instance.prototype;
 
 	// called whenever an instance is created
@@ -293,6 +293,8 @@ cr.plugins_.appMobiDev = function(runtime)
 			document.addEventListener("appMobi.file.upload",amev.uploadComplete,false);
 			
 			document.addEventListener("appMobi.notification.confirm",amev.confirmModalResponse,false);
+			
+			document.addEventListener("appMobi.device.orientation.change",window['dcDeviceOrientationChanged'],false);
 		}
 		
 		if(isDC){ awex("window['dcGetDeviceInfo']();"); }
@@ -425,6 +427,8 @@ cr.plugins_.appMobiDev = function(runtime)
 			aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnConfirmationDeclined, aMInst);
 		}
 	}
+	
+	window['dcDeviceOrientationChanged']=function(){ aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnOrientationChanged, aMInst); }
 	
 	//////////////////////////////////////
 	// Conditions
