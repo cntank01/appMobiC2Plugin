@@ -78,6 +78,7 @@ AddCondition(6, 0, "Compare initial orientation", "Device", "Initial orientation
 
 AddCondition(7, cf_trigger, "On barcode scanned", "Triggers", "On barcode scanned", "Triggered when a barcode scanned.", "OnBarcodeScanned");
 AddCondition(8, cf_trigger, "On remote site closed", "Triggers", "On remote site closed", "Triggered when the user closes a site opened with 'Show remote site'.", "OnRemoteSiteClosed");
+AddStringParam('ID', 'Id of remote data call.', '""');
 AddCondition(9, cf_trigger, "On remote data", "Triggers", "On remote data", "Triggered when remote data requested with 'Get remote data' is received.", "OnRemoteData");
 AddCondition(10, cf_trigger, "On 'back' button pressed", "Triggers", "On 'back' button pressed", "Triggered when the 'back' button (if any) is pressed after adding a virtual page.", "OnBack");
 
@@ -107,6 +108,7 @@ AddCondition(25, cf_trigger, "Confirmation Approved", "Triggers", "Confirmation 
 AddCondition(26, cf_trigger, "Confirmation Declined", "Triggers", "Confirmation Declined", "Fired when user declines the confirmation modal.", "OnConfirmationDeclined");
 
 AddCondition(27, cf_trigger, "Orientation Changed", "Triggers", "Orientation Changed", "Fired when the device changes orientation.", "OnOrientationChanged");
+
 
 ////////////////////////////////////////
 // Actions
@@ -407,6 +409,8 @@ AddExpression(25, ef_return_number, "Z", "Accelerometer", "AccelerationZ", "Cont
 AddExpression(26, ef_return_number, "Picture list count", "Camera", "PictureListCount", "Contains number of pictures in the applications picture list.");
 AddExpression(27, ef_return_string | ef_variadic_parameters, "Picture url", "Camera", "PictureUrl", "Returns the local url list.");
 AddExpression(28, ef_return_string, "Current Picture url", "Camera", "CurrentPictureUrl", "Returns the local url of the picture just taken with the camera.");
+
+AddExpression(29, ef_return_string, "Local Path", "Device", "LocalPath", "Returns the local path for the root folder of your game.");
 
 
 ////////////////////////////////////////

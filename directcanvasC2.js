@@ -23,6 +23,8 @@ window['appMobiFileUploadURL']='';
 	AppMobi.canvas.execute("window['dcDeviceInitialOrientation']('"+initialOrientation+"');");	
 	
 	window['refreshDCCookies']();	
+	
+	AppMobi.canvas.execute("window['deviceWebRoot']='"+AppMobi['webRoot']+"';");
 }
 
 
@@ -90,9 +92,9 @@ document.addEventListener("appMobi.notification.push.send", function(evt){
 
 
 document.addEventListener("appMobi.device.remote.data", function(evt){
-	try {
-		if(evt.success){
-			AppMobi.canvas.execute("window['dcGetRemoteData']('"+encodeURIComponent(evt.response)+"');");
+	try {		
+		if(evt.success){			
+			AppMobi.canvas.execute("window['dcGetRemoteData']('"+evt.id+"','"+encodeURIComponent(evt.response)+"');");
 		}
 	} catch(e){}
 },false);
@@ -193,13 +195,22 @@ function dcNotificationSetUserAttributes(s){
 
 function GetRemoteData(method,url,body,id){
 	if(url.toLowerCase().indexOf('http')<0){ url=AppMobi['webRoot']+url; }
-	AppMobi.device.getRemoteData(url, method, body, 'processRemoteData', 'processRemoteData');
+	//AppMobi.device.getRemoteData(url, method, body, 'processRemoteData', 'processRemoteData');
+	
+	var gtdp = new AppMobi.Device.RemoteDataParameters();
+	gtdp.url = url;
+	gtdp.id = id;
+	gtdp.method = method;
+	if(method=='POST'){ gtdp.body=body;	}
+	
+	AppMobi.device.getRemoteDataExt(gtdp);
 }
 
-function processRemoteData(data){
+/*function processRemoteData(data){
 	d=data.replace("'", "&#39;");
 	AppMobi.canvas.execute("window['dcGetRemoteData']('"+d+"');");
-}
+}*/
+
 function wvGeoProcessLocation(p){
 	AppMobi.canvas.execute("window['amevGeoProcessLocation']('"+p.coords.latitude+"','"+p.coords.longitude+"');");
 }

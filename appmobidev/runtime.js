@@ -70,7 +70,8 @@ cr.plugins_.appMobiDev = function(runtime)
 	pluginProto.Instance = function(type)
 	{
 		this.type = type;
-		this.runtime = type.runtime;		
+		this.runtime = type.runtime;	
+		this.currentGRDId='';		
 	};
 	
 	//////////////////////////////////////
@@ -83,7 +84,7 @@ cr.plugins_.appMobiDev = function(runtime)
 		try {
 			if(event.success)
 			{
-				
+				aMInst.currentGRDId=event.id;
 				evtRemoteDataResponse=event.response;
 				aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnRemoteData, aMInst); //aMInst
 			}
@@ -364,8 +365,9 @@ cr.plugins_.appMobiDev = function(runtime)
 		}catch(e){}
 	};
 	
-	window['dcGetRemoteData']=function(data){
+	window['dcGetRemoteData']=function(id,data){
 		try{
+			aMInst.currentGRDId=id;
 			evtRemoteDataResponse=decodeURIComponent(data);
 			aMRuntime.trigger(cr.plugins_.appMobiDev.prototype.cnds.OnRemoteData, aMInst); //aMInst
 		}catch(e){}
@@ -413,6 +415,8 @@ cr.plugins_.appMobiDev = function(runtime)
 	window['accelWatchTimer']={};
 	
 	window['appMobiFileUploadURL']='';
+	
+	window['deviceWebRoot']='';
 	
 	window['dcPurchaseSuccess']=function(){ amev.otFinishPayment();}
 	
@@ -566,10 +570,10 @@ cr.plugins_.appMobiDev = function(runtime)
 		return true;
 	};
 	
-	cnds.OnRemoteData = function ()
-	{
-		return true;
-	};
+	cnds.OnRemoteData = function (id)
+	{ 
+		return aMInst.currentGRDId.toLowerCase()==id.toLowerCase();
+	};	
 	
 	cnds.OnBack = function ()
 	{
@@ -577,7 +581,7 @@ cr.plugins_.appMobiDev = function(runtime)
 	};
 	
 	cnds.OnPictureSuccess = function ()
-	{ console.log('picture taken');
+	{ 
 		return true;
 	};
 	
@@ -1531,6 +1535,14 @@ cr.plugins_.appMobiDev = function(runtime)
 	
 	exps.CurrentPictureUrl=function(ret){
 		ret.set_string(evtCameraImageURL);
+	}
+	
+	exps.LocalPath=function(ret){
+		if(isDC){
+			ret.set_string(window['deviceWebRoot']);
+		}else{
+			ret.set_string(aMObj['webRoot']);
+		}
 	}
 
 }());
