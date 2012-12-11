@@ -88,7 +88,9 @@ Virtual Pages
 - Add virtual page
 - Remove virtual page
 
-
+1Touch
+------
+- Purchase
 
 Available Events
 =====================
@@ -122,6 +124,11 @@ Triggers
 - File uploaded
 - Confirmation approved
 - Confirmation declined
+
+1Touch
+------
+- Payment success
+- Payment canceled
 
 Available Expressions
 =====================
@@ -174,6 +181,9 @@ Notifications
 - Push Friend User Id
 
 
+Important Notes About Using 1Touch
+=================================================
+You will need to include the onetouch.js file in your index.html file.
 
 Important Notes About Exporting Using DirectCanvas
 =================================================
